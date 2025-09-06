@@ -1,5 +1,6 @@
 import uuid
 
+from alpespartners.seedwork.aplicacion.dto import Mapeador as AppMap
 from alpespartners.seedwork.dominio.repositorios import Mapeador as RepMap
 
 from alpespartners.modulos.pagos.dominio.entidades import Pago
@@ -22,3 +23,16 @@ class MapeadorPago(RepMap):
         pago.id_influencer = uuid.UUID(dto.id_influencer)
         pago.monto = Monto(dto.monto)
         return pago
+
+
+class MapeadorPagoDTOJson(AppMap):
+    def externo_a_dto(self, externo: dict) -> PagoDTO:
+        pago_dto = PagoDTO(
+            id_influencer=externo.get("id_influencer", None),
+            monto=float(externo.get("monto", None))
+        )
+        return pago_dto
+
+    def dto_a_externo(self, dto: PagoDTO) -> dict:
+        return dto.__dict__
+
