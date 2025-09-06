@@ -10,7 +10,7 @@ import uuid
 from alpespartners.seedwork.dominio.repositorios import Mapeador
 
 from alpespartners.modulos.pagos.dominio.entidades import Pago
-from alpespartners.modulos.pagos.dominio.objetos_valor import Monto
+from alpespartners.modulos.pagos.dominio.objetos_valor import Monto, EstadoPago
 
 from .dto import Pago as PagoDTO
 
@@ -26,6 +26,7 @@ class MapeadorPago(Mapeador):
         pago_dto.fecha_actualizacion = entidad.fecha_actualizacion
         pago_dto.id_influencer = str(entidad.id_influencer)
         pago_dto.monto = float(entidad.monto.valor)
+        pago_dto.estado = str(entidad.estado.name)
         return pago_dto
 
     def dto_a_entidad(self, dto: PagoDTO) -> Pago:
@@ -33,5 +34,6 @@ class MapeadorPago(Mapeador):
 
         pago.id_influencer = uuid.UUID(dto.id_influencer)
         pago.monto = Monto(dto.monto)
+        pago.estado = EstadoPago[dto.estado]
 
         return pago

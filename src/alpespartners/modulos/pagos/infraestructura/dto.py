@@ -5,6 +5,7 @@ la infraestructura del dominio de vuelos
 """
 
 from alpespartners.config.db import db
+from alpespartners.modulos.pagos.dominio.objetos_valor import EstadoPago
 
 
 Base = db.declarative_base()
@@ -17,3 +18,4 @@ class Pago(db.Model):
     fecha_actualizacion = db.Column(db.DateTime, nullable=False)
     id_influencer = db.Column(db.String, nullable=True, index=True)
     monto = db.Column(db.Float, nullable=False)
+    estado = db.Column(db.Enum(EstadoPago), nullable=False)
