@@ -20,4 +20,6 @@ class Pago(AgregacionRaiz):
     def solicitar(self, pago: Pago):
         self.id_influencer = pago.id_influencer
         self.monto = pago.monto
-        self.agregar_evento(PagoSolicitado(id_pago=self.id))
+
+        evento = PagoSolicitado(id_pago=self.id, id_influencer=self.id_influencer, monto=self.monto.valor)
+        self.agregar_evento(evento)
