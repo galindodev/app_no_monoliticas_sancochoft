@@ -8,7 +8,7 @@ from alpespartners.seedwork.dominio.excepciones import ExcepcionDominio
 from alpespartners.modulos.pagos.aplicacion.mapeadores import MapeadorPagoDTOJson
 
 from alpespartners.modulos.pagos.aplicacion.comandos.solicitar_pago import SolicitarPago
-from alpespartners.seedwork.aplicacion.comandos import ejecutar_commando
+from alpespartners.modulos.pagos.infraestructura.despachadores import Despachador
 
 
 bp = api.crear_blueprint('pagos', '/pagos')
@@ -24,9 +24,8 @@ def solicitar_pago_asincrona():
 
         comando = SolicitarPago(id_influencer=solicitud_dto.id_influencer, monto=solicitud_dto.monto)
 
-        # TODO: Reemplaze es todo código sincrono y use el broker de eventos para propagar este comando de forma asíncrona
-        # Revise la clase Despachador de la capa de infraestructura
-        ejecutar_commando(comando)
+        despachador = Despachador()
+        despachador.publicar_comando(comando, 'comandos-pagos')
 
         return Response('{}', status=202, mimetype='application/json')
     except ExcepcionDominio as e:
