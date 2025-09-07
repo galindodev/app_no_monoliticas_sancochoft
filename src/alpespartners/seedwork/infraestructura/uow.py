@@ -4,7 +4,6 @@ from enum import Enum
 from alpespartners.seedwork.dominio.entidades import AgregacionRaiz
 from pydispatch import dispatcher
 
-import pickle
 
 
 class Lock(Enum):
@@ -71,111 +70,49 @@ class UnidadTrabajo(ABC):
         for evento in self._obtener_eventos():
             dispatcher.send(signal=f'{type(evento).__name__}Integracion', evento=evento)
 
-def is_flask():
-    try:
-        from flask import session
-        return True
-    except Exception as e:
-        return False
 
-def registrar_unidad_de_trabajo(serialized_obj):
-    from alpespartners.config.uow import UnidadTrabajoSQLAlchemy
-    from flask import session
-
-
-    session['uow'] = serialized_obj
-
-def flask_uow():
-    from flask import session
-    from alpespartners.config.uow import UnidadTrabajoSQLAlchemy
-    if session.get('uow'):
-        return session['uow']
-    else:
-        uow_serialized = pickle.dumps(UnidadTrabajoSQLAlchemy())
-        registrar_unidad_de_trabajo(uow_serialized)
-        return uow_serialized
+# Contexto global para la unidad de trabajo
+_uow_global = None
 
 def unidad_de_trabajo() -> UnidadTrabajo:
-    if is_flask():
-        return pickle.loads(flask_uow())
-    else:
-        raise Exception('No hay unidad de trabajo')
+    global _uow_global
+    if _uow_global is None:
+        from alpespartners.config.uow import UnidadTrabajoSQLAlchemy
+        _uow_global = UnidadTrabajoSQLAlchemy()
+    return _uow_global
 
 def guardar_unidad_trabajo(uow: UnidadTrabajo):
-    if is_flask():
-        registrar_unidad_de_trabajo(pickle.dumps(uow))
-    else:
-        raise Exception('No hay unidad de trabajo')
+    global _uow_global
+    _uow_global = uow
 
 
 class UnidadTrabajoPuerto:
-    _uow_sqlalchemy = None
-
-    @staticmethod
-    def _get_uow():
-        if UnidadTrabajoPuerto._uow_sqlalchemy is None:
-            from alpespartners.config.uow import UnidadTrabajoSQLAlchemy
-            UnidadTrabajoPuerto._uow_sqlalchemy = UnidadTrabajoSQLAlchemy()
-        return UnidadTrabajoPuerto._uow_sqlalchemy
 
     @staticmethod
     def commit():
-        uow = UnidadTrabajoPuerto._get_uow()
+        uow = unidad_de_trabajo()
         uow.commit()
-        UnidadTrabajoPuerto._uow_sqlalchemy = None
+        guardar_unidad_trabajo(uow)
 
     @staticmethod
     def rollback(savepoint=None):
-        uow = UnidadTrabajoPuerto._get_uow()
+        uow = unidad_de_trabajo()
         uow.rollback(savepoint=savepoint)
-        UnidadTrabajoPuerto._uow_sqlalchemy = None
+        guardar_unidad_trabajo(uow)
 
     @staticmethod
     def savepoint():
-        uow = UnidadTrabajoPuerto._get_uow()
+        uow = unidad_de_trabajo()
         uow.savepoint()
+        guardar_unidad_trabajo(uow)
 
     @staticmethod
     def dar_savepoints():
-        uow = UnidadTrabajoPuerto._get_uow()
+        uow = unidad_de_trabajo()
         return uow.savepoints()
 
     @staticmethod
     def registrar_batch(operacion, *args, lock=Lock.PESIMISTA, **kwargs):
-        uow = UnidadTrabajoPuerto._get_uow()
+        uow = unidad_de_trabajo()
         uow.registrar_batch(operacion, *args, lock=lock, **kwargs)
-
-
-class UnidadTrabajoMemoria(UnidadTrabajo):
-    def __init__(self):
-        self._batches = []
-        self._savepoints = []
-
-    def _limpiar_batches(self):
-        self._batches.clear()
-
-    @property
-    def batches(self) -> list[Batch]:
-        return self._batches
-
-    @property
-    def savepoints(self) -> list:
-        return self._savepoints
-
-    def rollback(self, savepoint=None):
-        self._limpiar_batches()
-        if savepoint:
-            self._savepoints = [sp for sp in self._savepoints if sp != savepoint]
-
-    def savepoint(self):
-        count = len(self._savepoints) + 1
-        savepoint_name = f"savepoint_{count}"
-        self._savepoints.append(savepoint_name)
-        return savepoint_name
-
-    def commit(self):
-        # Ejecuta las operaciones de los batches
-        for batch in self._batches:
-            batch.operacion(*batch.args, **batch.kwargs)
-        self._publicar_eventos_post_commit()
-        self._limpiar_batches()
+        guardar_unidad_trabajo(uow)
