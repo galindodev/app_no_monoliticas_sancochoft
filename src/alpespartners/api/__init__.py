@@ -26,15 +26,11 @@ def comenzar_consumidor():
     """
     import threading
     import alpespartners.modulos.pagos.infraestructura.consumidores as pagos
-    import alpespartners.modulos.liquidacion.infraestructura.consumidores as liquidacion
 
     # Suscripción a eventos
-    threading.Thread(target=pagos.suscribirse_a_eventos).start()
-    threading.Thread(target=liquidacion.suscribirse_a_eventos).start()
 
     # Suscripción a comandos
     threading.Thread(target=pagos.suscribirse_a_comandos).start()
-    threading.Thread(target=liquidacion.suscribirse_a_comandos).start()
 
 
 def configure_app(configuracion={}):

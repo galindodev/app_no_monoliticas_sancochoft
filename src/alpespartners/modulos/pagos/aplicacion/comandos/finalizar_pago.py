@@ -5,11 +5,8 @@ from alpespartners.seedwork.aplicacion.comandos import Comando
 from alpespartners.seedwork.aplicacion.comandos import ComandoHandler
 from alpespartners.seedwork.infraestructura.uow import UnidadTrabajoPuerto
 from alpespartners.seedwork.aplicacion.comandos import ejecutar_commando as comando
-from alpespartners.modulos.pagos.dominio.objetos_valor import EstadoPago
 
-from alpespartners.modulos.pagos.aplicacion.dto import PagoDTO
 from alpespartners.modulos.pagos.dominio.entidades import Pago
-from alpespartners.modulos.pagos.aplicacion.mapeadores import MapeadorPago
 
 from alpespartners.modulos.pagos.dominio.fabricas import FabricaPagos
 from alpespartners.modulos.pagos.dominio.repositorios import RepositorioPagos
@@ -35,7 +32,7 @@ class FinalizarPagoHandler(ComandoHandler):
 
         UnidadTrabajoPuerto.registrar_batch(self.repositorio.actualizar, pago)
         UnidadTrabajoPuerto.savepoint()
-        UnidadTrabajoPuerto.commit()
+        # UnidadTrabajoPuerto.commit()
 
 
 @comando.register(FinalizarPago)

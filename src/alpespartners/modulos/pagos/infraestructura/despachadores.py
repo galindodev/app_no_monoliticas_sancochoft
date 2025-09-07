@@ -1,7 +1,6 @@
 import pulsar
 from pulsar.schema import *
 
-from alpespartners.modulos.pagos.infraestructura.fabricas import FabricaEventosDominio
 from alpespartners.modulos.pagos.infraestructura.schema.v1.comandos import ComandoSolicitarPago, ComandoSolicitarPagoPayload
 from alpespartners.seedwork.infraestructura import utils
 
@@ -26,5 +25,4 @@ class Despachador:
         self._publicar_mensaje(comando_integracion, topico, AvroSchema(ComandoSolicitarPago))
 
     def publicar_evento(self, evento, topico):
-        evento_infra = FabricaEventosDominio.crear_evento(evento)
-        self._publicar_mensaje(evento_infra, topico, AvroSchema(type(evento_infra)))
+        raise NotImplementedError

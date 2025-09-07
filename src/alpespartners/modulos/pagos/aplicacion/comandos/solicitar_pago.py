@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import uuid
 
 from alpespartners.seedwork.aplicacion.comandos import Comando
 from alpespartners.seedwork.aplicacion.comandos import ComandoHandler
@@ -28,6 +29,7 @@ class SolicitarPagoHandler(ComandoHandler):
 
     def handle(self, comando: SolicitarPago):
         pago_dto = PagoDTO(
+                id=str(uuid.uuid4()),
                 id_influencer=comando.id_influencer,
                 monto=comando.monto,
                 estado=EstadoPago.CREADO.value)
@@ -38,6 +40,9 @@ class SolicitarPagoHandler(ComandoHandler):
         repositorio = self.fabrica_repositorio.crear_objeto(RepositorioPagos.__class__)
 
         UnidadTrabajoPuerto.registrar_batch(repositorio.agregar, pago)
+
+        pago.finalizar()
+
         UnidadTrabajoPuerto.savepoint()
         UnidadTrabajoPuerto.commit()
 

@@ -44,7 +44,6 @@ class LiquidarPagoHandler(ComandoHandler):
 
         UnidadTrabajoPuerto.registrar_batch(repositorio.agregar, liquidacion)
         UnidadTrabajoPuerto.savepoint()
-        UnidadTrabajoPuerto.commit()
 
     def simular_pago(self):
         ''' Simula la aprobacion o rechazo del pago. Retorna True si se aprueba, False si se rechaza.'''

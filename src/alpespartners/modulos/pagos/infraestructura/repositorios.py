@@ -17,7 +17,7 @@ from .mapeadores import MapeadorPago
 from .dto import Pago as PagoDTO
 
 
-class RepositorioReservasSQLAlchemy(RepositorioPagos):
+class RepositorioPagosSQLAlchemy(RepositorioPagos):
     def __init__(self):
         self.fabrica_pagos: FabricaPagos = FabricaPagos()
 
