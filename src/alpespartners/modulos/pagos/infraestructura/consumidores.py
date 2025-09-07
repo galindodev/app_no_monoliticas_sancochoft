@@ -29,14 +29,18 @@ def suscribirse_a_eventos():
             data = mensaje.value().data
             print('===========================')
             print(f'Evento recibido: {data}')
-            print('===== ACTUALIZAR ESTADO DEL PAGO =====')
+            print('===== LIQUIDACION FINALIZADA =====')
             print('===========================')
 
             comando = FinalizarPago(id_pago=data.id_pago)
             with app.app_context():
-                ejecutar_commando(comando)
-
-            consumidor.acknowledge(mensaje)
+                try:
+                    ejecutar_commando(comando)
+                    consumidor.acknowledge(mensaje)
+                except Exception as error:
+                    print(f'Error al procesar el evento: {error}')
+                    traceback.print_exc()
+                    consumidor.negative_acknowledge(mensaje)
 
         cliente.close()
     except:
@@ -52,7 +56,13 @@ def suscribirse_a_comandos():
 
     try:
         cliente = pulsar.Client(f'pulsar://{utils.broker_host()}:6650')
-        consumidor = cliente.subscribe(topic='comandos-pagos', consumer_type=_pulsar.ConsumerType.Shared, subscription_name='alpespartners-pagos-sub-comandos', schema=AvroSchema(ComandoSolicitarPago))
+        consumidor = cliente.subscribe(
+            topic='comandos-pagos',
+            consumer_type=_pulsar.ConsumerType.Shared,
+            subscription_name='alpespartners-pagos-sub-comandos',
+            schema=AvroSchema(ComandoSolicitarPago),
+            negative_ack_redelivery_delay_ms=5000,
+        )
 
         while True:
             mensaje = consumidor.receive()
@@ -64,9 +74,13 @@ def suscribirse_a_comandos():
 
             comando = SolicitarPago(id_influencer=data.id_influencer, monto=data.monto)
             with app.app_context():
-                ejecutar_commando(comando)
-
-            consumidor.acknowledge(mensaje)
+                try:
+                    ejecutar_commando(comando)
+                    consumidor.acknowledge(mensaje)
+                except Exception as error:
+                    print(f'Error al procesar el comando: {error}')
+                    traceback.print_exc()
+                    consumidor.negative_acknowledge(mensaje)
 
         cliente.close()
     except:

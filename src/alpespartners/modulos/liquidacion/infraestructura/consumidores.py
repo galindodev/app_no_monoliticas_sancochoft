@@ -29,7 +29,7 @@ def suscribirse_a_eventos():
             data = mensaje.value().data
             print('===========================')
             print(f'Evento recibido: {data}')
-            print('===== LIQUIDAR PAGO =====')
+            print('===== PAGO SOLICITADO =====')
             print('===========================')
 
             comando = LiquidarPago(
@@ -41,13 +41,14 @@ def suscribirse_a_eventos():
                 try:
                     ejecutar_commando(comando)
                     consumidor.acknowledge(mensaje)
-                except LiquidaRechazadaExcepcion as error:
-                    logging.error(f'ERROR: La liquidacion del pago fue rechazada! {error}')
+                except Exception as error:
+                    print(f'Error al procesar el evento: {error}')
+                    traceback.print_exc()
                     consumidor.negative_acknowledge(mensaje)
 
         cliente.close()
     except:
-        logging.error('ERROR: Suscribiendose al tópico de eventos!')
+        print('ERROR: Suscribiendose al tópico de eventos!')
         traceback.print_exc()
         if cliente:
             cliente.close()
