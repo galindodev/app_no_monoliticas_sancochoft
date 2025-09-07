@@ -14,6 +14,7 @@ from alpespartners.modulos.pagos.dominio.repositorios import RepositorioPagos
 from alpespartners.modulos.pagos.dominio.fabricas import FabricaPagos
 
 from .mapeadores import MapeadorPago
+from .dto import Pago as PagoDTO
 
 
 class RepositorioReservasSQLAlchemy(RepositorioPagos):
@@ -21,7 +22,8 @@ class RepositorioReservasSQLAlchemy(RepositorioPagos):
         self.fabrica_pagos: FabricaPagos = FabricaPagos()
 
     def obtener_por_id(self, id: UUID) -> Pago:
-        raise NotImplementedError
+        result = db.session.query(PagoDTO).filter_by(id=str(id)).one()
+        return self.fabrica_pagos.crear_objeto(result, MapeadorPago())
 
     def obtener_todos(self) -> list[Pago]:
         raise NotImplementedError
@@ -31,7 +33,8 @@ class RepositorioReservasSQLAlchemy(RepositorioPagos):
         db.session.add(pago_dto)
 
     def actualizar(self, pago: Pago):
-        raise NotImplementedError
+        pago_dto: PagoDTO = self.fabrica_pagos.crear_objeto(pago, MapeadorPago())
+        db.session.merge(pago_dto)
 
     def eliminar(self, reserva_id: UUID):
         raise NotImplementedError

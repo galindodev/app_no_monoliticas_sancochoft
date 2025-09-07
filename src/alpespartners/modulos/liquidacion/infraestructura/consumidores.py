@@ -5,6 +5,7 @@ import traceback
 
 from alpespartners.api import configure_app
 from alpespartners.modulos.liquidacion.aplicacion.comandos.liquidar_pago import LiquidarPago
+from alpespartners.modulos.liquidacion.dominio.excepciones import LiquidaRechazadaExcepcion
 from alpespartners.modulos.pagos.infraestructura.schema.v1.eventos import EventoDominioPagoSolicitado
 from alpespartners.seedwork.aplicacion.comandos import ejecutar_commando
 from alpespartners.seedwork.infraestructura import utils
@@ -19,13 +20,17 @@ def suscribirse_a_eventos():
             topic='eventos-pagos',
             consumer_type=_pulsar.ConsumerType.Shared,
             subscription_name='alpespartners-liquidacion-sub-eventos',
-            schema=AvroSchema(EventoDominioPagoSolicitado)
+            schema=AvroSchema(EventoDominioPagoSolicitado),
+            negative_ack_redelivery_delay_ms=5000
         )
 
         while True:
             mensaje = consumidor.receive()
             data = mensaje.value().data
+            print('===========================')
             print(f'Evento recibido: {data}')
+            print('===== LIQUIDAR PAGO =====')
+            print('===========================')
 
             comando = LiquidarPago(
                 id_pago=data.id_pago,
@@ -33,9 +38,12 @@ def suscribirse_a_eventos():
                 monto=data.monto
             )
             with app.app_context():
-                ejecutar_commando(comando)
-
-            consumidor.acknowledge(mensaje)
+                try:
+                    ejecutar_commando(comando)
+                    consumidor.acknowledge(mensaje)
+                except LiquidaRechazadaExcepcion as error:
+                    logging.error(f'ERROR: La liquidacion del pago fue rechazada! {error}')
+                    consumidor.negative_acknowledge(mensaje)
 
         cliente.close()
     except:

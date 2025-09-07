@@ -5,6 +5,7 @@ import traceback
 
 from alpespartners.api import configure_app
 from alpespartners.modulos.liquidacion.infraestructura.schema.v1.eventos import EventoDominioLiquidacionFinalizada
+from alpespartners.modulos.pagos.aplicacion.comandos.finalizar_pago import FinalizarPago
 from alpespartners.modulos.pagos.aplicacion.comandos.solicitar_pago import SolicitarPago
 from alpespartners.modulos.pagos.infraestructura.schema.v1.comandos import ComandoSolicitarPago
 from alpespartners.seedwork.aplicacion.comandos import ejecutar_commando
@@ -31,14 +32,9 @@ def suscribirse_a_eventos():
             print('===== ACTUALIZAR ESTADO DEL PAGO =====')
             print('===========================')
 
-            # TODO: Lanzar comando para actualizar pago
-            # comando = LiquidarPago(
-            #     id_pago=data.id_pago,
-            #     id_influencer=data.id_influencer,
-            #     monto=data.monto
-            # )
-            # with app.app_context():
-            #     ejecutar_commando(comando)
+            comando = FinalizarPago(id_pago=data.id_pago)
+            with app.app_context():
+                ejecutar_commando(comando)
 
             consumidor.acknowledge(mensaje)
 
@@ -61,7 +57,10 @@ def suscribirse_a_comandos():
         while True:
             mensaje = consumidor.receive()
             data = mensaje.value().data
+            print('============================')
+            print('===== COMANDO - SOLICITAR PAGO =====')
             print(f'Comando recibido: {data}')
+            print('============================')
 
             comando = SolicitarPago(id_influencer=data.id_influencer, monto=data.monto)
             with app.app_context():

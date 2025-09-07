@@ -25,3 +25,6 @@ class Pago(AgregacionRaiz):
 
         evento = PagoSolicitado(id_pago=self.id, id_influencer=self.id_influencer, monto=self.monto.valor)
         self.agregar_evento(evento)
+
+    def finalizar(self):
+        self.estado = EstadoPago.PAGADO

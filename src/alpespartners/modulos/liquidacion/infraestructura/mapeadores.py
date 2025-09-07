@@ -33,7 +33,8 @@ class MapeadorLiquidacion(Mapeador):
     def dto_a_entidad(self, dto: LiquidacionDTO) -> Liquidacion:
         liquidacion = Liquidacion(dto.id, dto.fecha_creacion, dto.fecha_actualizacion)
 
-        liquidacion.pago = uuid.UUID(dto.pago)
+        liquidacion._id = uuid.UUID(dto.id)
+        liquidacion.id_pago = uuid.UUID(dto.id_pago)
         liquidacion.id_influencer = uuid.UUID(dto.id_influencer)
         liquidacion.monto = Monto(dto.monto)
 

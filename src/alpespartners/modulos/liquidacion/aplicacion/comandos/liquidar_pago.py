@@ -1,3 +1,4 @@
+from random import random
 from dataclasses import dataclass
 
 from alpespartners.modulos.liquidacion.dominio.excepciones import LiquidaRechazadaExcepcion
@@ -35,22 +36,22 @@ class LiquidarPagoHandler(ComandoHandler):
 
         liquidacion: Liquidacion = self.fabrica_liquidacion.crear_objeto(liquidacion_dto, MapeadorLiquidacion())
 
-        # TODO: Consumir servicio de pasarela de pagos
-        pagado = True
-        if not pagado:
+        if not self.simular_pago():
             raise LiquidaRechazadaExcepcion(str(liquidacion.id))
 
         liquidacion.liquidar_pago(liquidacion)
         repositorio = self.fabrica_repositorio.crear_objeto(RepositorioLiquidacion.__class__)
 
-
-        repositorio.agregar(liquidacion)
         UnidadTrabajoPuerto.registrar_batch(repositorio.agregar, liquidacion)
         UnidadTrabajoPuerto.savepoint()
         UnidadTrabajoPuerto.commit()
 
+    def simular_pago(self):
+        ''' Simula la aprobacion o rechazo del pago. Retorna True si se aprueba, False si se rechaza.'''
+        return random() > 0.5
+
 
 @comando.register(LiquidarPago)
-def ejecutar_comando_solicitar_pago(comando: LiquidarPago):
+def ejecutar_comando_liquidar_pago(comando: LiquidarPago):
     handler = LiquidarPagoHandler()
     handler.handle(comando)
