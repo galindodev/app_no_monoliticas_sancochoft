@@ -122,11 +122,13 @@ class UnidadTrabajoPuerto:
     def commit():
         uow = UnidadTrabajoPuerto._get_uow()
         uow.commit()
+        UnidadTrabajoPuerto._uow_sqlalchemy = None
 
     @staticmethod
     def rollback(savepoint=None):
         uow = UnidadTrabajoPuerto._get_uow()
         uow.rollback(savepoint=savepoint)
+        UnidadTrabajoPuerto._uow_sqlalchemy = None
 
     @staticmethod
     def savepoint():

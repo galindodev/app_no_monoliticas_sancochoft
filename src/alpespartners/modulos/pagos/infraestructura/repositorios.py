@@ -21,11 +21,9 @@ class RepositorioReservasSQLAlchemy(RepositorioPagos):
         self.fabrica_pagos: FabricaPagos = FabricaPagos()
 
     def obtener_por_id(self, id: UUID) -> Pago:
-        # TODO
         raise NotImplementedError
 
     def obtener_todos(self) -> list[Pago]:
-        # TODO
         raise NotImplementedError
 
     def agregar(self, pago: Pago):
@@ -33,9 +31,7 @@ class RepositorioReservasSQLAlchemy(RepositorioPagos):
         db.session.add(pago_dto)
 
     def actualizar(self, pago: Pago):
-        # TODO
         raise NotImplementedError
 
     def eliminar(self, reserva_id: UUID):
-        # TODO
         raise NotImplementedError

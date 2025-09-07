@@ -1,10 +1,11 @@
 from pulsar.schema import *
-from alpespartners.seedwork.infraestructura.schema.v1.eventos import EventoIntegracion
+from alpespartners.seedwork.infraestructura.schema.v1.eventos import EventoDominio
 
-class SolicitarPagoPayload(Record):
+class EventoDominioPagoSolicitadoPayload(Record):
     id_pago = String()
     id_influencer = String()
     monto = Float()
 
-class EventoSolicitarPago(EventoIntegracion):
-    data = SolicitarPagoPayload()
+
+class EventoDominioPagoSolicitado(EventoDominio):
+    data = EventoDominioPagoSolicitadoPayload()

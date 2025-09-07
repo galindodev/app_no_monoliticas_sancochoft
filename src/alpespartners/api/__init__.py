@@ -3,16 +3,20 @@ import os
 from flask import Flask, jsonify
 from flask_swagger import swagger
 
+
 # Identifica el directorio base
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 def registrar_handlers():
     import alpespartners.modulos.pagos.aplicacion
+    import alpespartners.modulos.liquidacion.aplicacion
 
 
 def importar_modelos_alchemy():
     import alpespartners.modulos.pagos.infraestructura.dto
+    import alpespartners.modulos.liquidacion.infraestructura.dto
+
 
 def comenzar_consumidor():
     """
@@ -22,11 +26,15 @@ def comenzar_consumidor():
     """
     import threading
     import alpespartners.modulos.pagos.infraestructura.consumidores as pagos
+    import alpespartners.modulos.liquidacion.infraestructura.consumidores as liquidacion
 
     # Suscripción a eventos
+    threading.Thread(target=pagos.suscribirse_a_eventos).start()
+    threading.Thread(target=liquidacion.suscribirse_a_eventos).start()
 
     # Suscripción a comandos
     threading.Thread(target=pagos.suscribirse_a_comandos).start()
+    threading.Thread(target=liquidacion.suscribirse_a_comandos).start()
 
 
 def configure_app(configuracion={}):
