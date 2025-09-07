@@ -35,7 +35,6 @@ class FinalizarPagoHandler(ComandoHandler):
 
         UnidadTrabajoPuerto.registrar_batch(self.repositorio.actualizar, pago)
         UnidadTrabajoPuerto.savepoint()
-        UnidadTrabajoPuerto.commit()
 
 
 @comando.register(FinalizarPago)
