@@ -109,32 +109,71 @@ def guardar_unidad_trabajo(uow: UnidadTrabajo):
 
 
 class UnidadTrabajoPuerto:
+    _uow_sqlalchemy = None
+
+    @staticmethod
+    def _get_uow():
+        if UnidadTrabajoPuerto._uow_sqlalchemy is None:
+            from alpespartners.config.uow import UnidadTrabajoSQLAlchemy
+            UnidadTrabajoPuerto._uow_sqlalchemy = UnidadTrabajoSQLAlchemy()
+        return UnidadTrabajoPuerto._uow_sqlalchemy
 
     @staticmethod
     def commit():
-        uow = unidad_de_trabajo()
+        uow = UnidadTrabajoPuerto._get_uow()
         uow.commit()
-        guardar_unidad_trabajo(uow)
 
     @staticmethod
     def rollback(savepoint=None):
-        uow = unidad_de_trabajo()
+        uow = UnidadTrabajoPuerto._get_uow()
         uow.rollback(savepoint=savepoint)
-        guardar_unidad_trabajo(uow)
 
     @staticmethod
     def savepoint():
-        uow = unidad_de_trabajo()
+        uow = UnidadTrabajoPuerto._get_uow()
         uow.savepoint()
-        guardar_unidad_trabajo(uow)
 
     @staticmethod
     def dar_savepoints():
-        uow = unidad_de_trabajo()
+        uow = UnidadTrabajoPuerto._get_uow()
         return uow.savepoints()
 
     @staticmethod
     def registrar_batch(operacion, *args, lock=Lock.PESIMISTA, **kwargs):
-        uow = unidad_de_trabajo()
+        uow = UnidadTrabajoPuerto._get_uow()
         uow.registrar_batch(operacion, *args, lock=lock, **kwargs)
-        guardar_unidad_trabajo(uow)
+
+
+class UnidadTrabajoMemoria(UnidadTrabajo):
+    def __init__(self):
+        self._batches = []
+        self._savepoints = []
+
+    def _limpiar_batches(self):
+        self._batches.clear()
+
+    @property
+    def batches(self) -> list[Batch]:
+        return self._batches
+
+    @property
+    def savepoints(self) -> list:
+        return self._savepoints
+
+    def rollback(self, savepoint=None):
+        self._limpiar_batches()
+        if savepoint:
+            self._savepoints = [sp for sp in self._savepoints if sp != savepoint]
+
+    def savepoint(self):
+        count = len(self._savepoints) + 1
+        savepoint_name = f"savepoint_{count}"
+        self._savepoints.append(savepoint_name)
+        return savepoint_name
+
+    def commit(self):
+        # Ejecuta las operaciones de los batches
+        for batch in self._batches:
+            batch.operacion(*batch.args, **batch.kwargs)
+        self._publicar_eventos_post_commit()
+        self._limpiar_batches()

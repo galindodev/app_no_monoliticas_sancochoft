@@ -25,7 +25,7 @@ def solicitar_pago_asincrona():
         comando = SolicitarPago(id_influencer=solicitud_dto.id_influencer, monto=solicitud_dto.monto)
 
         despachador = Despachador()
-        despachador.publicar_comando(comando, 'comandos-pagos')
+        despachador.publicar_comando(comando, topico='comandos-pagos')
 
         return Response('{}', status=202, mimetype='application/json')
     except ExcepcionDominio as e:

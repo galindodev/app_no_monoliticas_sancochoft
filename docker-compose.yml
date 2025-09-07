@@ -95,28 +95,43 @@ services:
       &&  exec bin/pulsar broker"
 
   # Servicios de AeroAlpes
-  alpespartners:
-    container_name: alpespartners
-    hostname: alpespartners
-    # image: alpespartners/flask
-    build:
-      context: .
-      dockerfile: alpespartners.Dockerfile
-    profiles: ["alpespartners", "monolito"]
+  db_pagos:
+    image: postgres:16
+    container_name: db_pagos
+    hostname: db_pagos
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=pagos
+    volumes:
+      - ./data/postgres/pagos:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
     networks:
       - sidecar
-      - pulsar
-    labels:
-      SidecarDiscover: "false"
-    depends_on:
-      - broker
-    environment:
-      - ALPESPARTNERS_ADDRESS=alpespartners
-      - PULSAR_ADDRESS=broker
-      - BROKER_HOST=broker
-    ports:
-      - "5000:5000"
-      
+    profiles: ["alpespartners", "monolito"]
+
+#   alpespartners:
+#     container_name: alpespartners
+#     hostname: alpespartners
+#     build:
+#       context: .
+#       dockerfile: alpespartners.Dockerfile
+#     profiles: ["alpespartners", "monolito"]
+#     networks:
+#       - sidecar
+#       - pulsar
+#     labels:
+#       SidecarDiscover: "false"
+#     depends_on:
+#       - broker
+#     environment:
+#       - ALPESPARTNERS_ADDRESS=alpespartners
+#       - PULSAR_ADDRESS=broker
+#       - BROKER_HOST=broker
+#     ports:
+#       - "5000:5000"
+
 #   adaptador:
 #     image: "aeroalpes/adaptador"
 #     profiles: ["aeroalpes", "monolito"]
@@ -146,19 +161,3 @@ services:
 #       - PULSAR_ADDRESS=broker
 #     networks:
 #       - pulsar
-#   # Servicio UI
-#   ui:
-#     container_name: ui
-#     hostname: ui
-#     image: aeroalpes/ui
-#     profiles: ["aeroalpes", "ui"]
-#     depends_on:
-#       - aeroalpes
-#       - broker
-#     environment:
-#       - AEROALPES_ADDRESS=aeroalpes
-#       - PULSAR_ADDRESS=broker
-#     networks:
-#       - pulsar
-#     ports:
-#       - "5678:5678"
