@@ -41,6 +41,9 @@ def suscribirse_a_eventos():
                 try:
                     ejecutar_commando(comando)
                     consumidor.acknowledge(mensaje)
+                    print("===========================")
+                    print("===== PAGO LIQUIDADO =====")
+                    print("===========================")
                 except Exception as error:
                     print(f'Error al procesar el evento: {error}')
                     traceback.print_exc()
