@@ -10,13 +10,22 @@ Los siguientes diagramas son una vista general. Pretender dar una noción de lo 
 
 <img width="468" src="./docs/arqui_modulos.png" />
 
-### Módulo de pagos
+| Módulo de pagos |
+|-----------------------|
+| <img width="468" src="./docs/arqui_pagos.png" />  |
 
-<img width="468" src="./docs/arqui_pagos.png" />
 
-### Módulo de liquidación
+| Módulo de liquidación |
+|-----------------------|
+| <img width="468" src="./docs/arqui_liquidacion.png" />|
 
-<img width="468" src="./docs/arqui_liquidacion.png" />
+| Secuencia - Solicitar un pago |
+|-----------------------|
+| <img width="900" src="./docs/secuencia_solicitar_pago.png" />|
+
+| Secuencia - Liquidación de pagos |
+|-----------------------|
+| <img width="900" src="./docs/secuencia_liquidacion_pagos.png" />|
 
 Este proyecto implementa un servicio bajo una arquitectura de microservicios basada en eventos, siguiendo los principios de Domain-Driven Design (DDD). El objetivo principal es experimentar y validar atributos de calidad relevantes (escalabilidad, disponibilidad y mantenibilidad) mediante escenarios diseñados específicamente para poner a prueba la solución.
 
