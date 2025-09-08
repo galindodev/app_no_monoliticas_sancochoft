@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from alpespartners.seedwork.aplicacion.dto import DTO
-from alpespartners.modulos.pagos.dominio.objetos_valor import EstadoPago
+
 
 @dataclass(frozen=True)
 class PagoDTO(DTO):

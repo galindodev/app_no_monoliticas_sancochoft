@@ -27,3 +27,6 @@ class FabricaPagos(Fabrica):
             self.validar_regla(MontoPositivo(pago.monto))
 
             return pago
+
+    def create_muchos_objetos(self, objs: list[any], mapeador: Mapeador) -> list[any]:
+        return [self.crear_objeto(obj, mapeador) for obj in objs]

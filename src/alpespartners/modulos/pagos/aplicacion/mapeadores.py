@@ -16,7 +16,7 @@ class MapeadorPago(RepMap):
     def entidad_a_dto(self, entidad: Pago) -> PagoDTO:
         id_influencer = str(entidad.id_influencer)
         monto = entidad.monto.valor
-        return PagoDTO(id_influencer, monto)
+        return PagoDTO(id_influencer, monto, estado=entidad.estado.value)
 
     def dto_a_entidad(self, dto: PagoDTO) -> Pago:
         pago = Pago()
@@ -38,3 +38,6 @@ class MapeadorPagoDTOJson(AppMap):
     def dto_a_externo(self, dto: PagoDTO) -> dict:
         return dto.__dict__
 
+
+    def dtos_a_externos(self, dtos: list[PagoDTO]) -> list[dict]:
+        return [self.dto_a_externo(dto) for dto in dtos]

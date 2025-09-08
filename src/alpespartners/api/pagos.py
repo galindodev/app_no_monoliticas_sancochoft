@@ -2,6 +2,8 @@ import json
 
 from flask import request, Response
 
+from alpespartners.modulos.pagos.aplicacion.queries.obtener_pagos_pendientes import ObtenerPagosPendientes
+from alpespartners.seedwork.aplicacion.queries import ejecutar_query
 import alpespartners.seedwork.presentacion.api as api
 from alpespartners.seedwork.dominio.excepciones import ExcepcionDominio
 
@@ -28,5 +30,16 @@ def solicitar_pago_asincrona():
         despachador.publicar_comando(comando, topico='comandos-pagos')
 
         return Response('{}', status=202, mimetype='application/json')
+    except ExcepcionDominio as e:
+        return Response(json.dumps(dict(error=str(e))), status=400, mimetype='application/json')
+
+
+@bp.route('/obtener-pagos-pendientes', methods=('GET',))
+def obtener_pagos_pendientes():
+    try:
+        query_resultado = ejecutar_query(ObtenerPagosPendientes())
+        map_pagos = MapeadorPagoDTOJson()
+        pendientes = map_pagos.dtos_a_externos(query_resultado.resultado)
+        return Response(json.dumps(pendientes), status=200, mimetype='application/json')
     except ExcepcionDominio as e:
         return Response(json.dumps(dict(error=str(e))), status=400, mimetype='application/json')
