@@ -1,0 +1,77 @@
+{
+	"info": {
+		"_postman_id": "f569f0f7-24bb-413b-8b87-1e4dff07ff09",
+		"name": "Alpes Partners",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14550156"
+	},
+	"item": [
+		{
+			"name": "Solicitar pago",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id_influencer\": \"{{$randomUUID}}\",\n    \"monto\": 1000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/pagos/solicitar-pago-comando",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"pagos",
+						"solicitar-pago-comando"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener pagos pendientes",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id_influencer\": \"{{$randomUUID}}\",\n    \"monto\": 1000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/pagos/obtener-pagos-pendientes",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"pagos",
+						"obtener-pagos-pendientes"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
