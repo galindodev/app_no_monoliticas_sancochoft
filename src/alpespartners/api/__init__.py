@@ -42,11 +42,11 @@ def configure_app(configuracion={}):
     app = Flask(__name__, instance_relative_config=True)
 
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}'.format(
-        user=configuracion.get('DB_USER', 'postgres'),
-        password=configuracion.get('DB_PASSWORD', 'postgres'),
-        host=configuracion.get('DB_HOST', 'localhost'),
-        port=configuracion.get('DB_PORT', 5433),
-        db=configuracion.get('DB_NAME', 'pagos')
+        user=os.getenv('DB_USER', 'postgres'),
+        password=os.getenv('DB_PASSWORD', 'postgres'),
+        host=os.getenv('DB_HOST', 'localhost'),
+        port=os.getenv('DB_PORT', 5433),
+        db=os.getenv('DB_NAME', 'pagos')
     )
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
