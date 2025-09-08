@@ -18,7 +18,7 @@ from .mapeadores import MapeadorPago
 from .dto import Pago as PagoDTO
 
 
-class RepositorioReservasSQLAlchemy(RepositorioPagos):
+class RepositorioPagosSQLAlchemy(RepositorioPagos):
     def __init__(self):
         self.fabrica_pagos: FabricaPagos = FabricaPagos()
 
@@ -38,5 +38,5 @@ class RepositorioReservasSQLAlchemy(RepositorioPagos):
         pago_dto: PagoDTO = self.fabrica_pagos.crear_objeto(pago, MapeadorPago())
         db.session.merge(pago_dto)
 
-    def eliminar(self, reserva_id: UUID):
+    def eliminar(self, pago_id: UUID):
         raise NotImplementedError

@@ -33,5 +33,5 @@ class RepositorioLiquidacionesSQLAlchemy(RepositorioLiquidacion):
     def obtener_todos(self) -> list[Liquidacion]:
         raise NotImplementedError
 
-    def eliminar(self, reserva_id: UUID):
+    def eliminar(self, pago_id: UUID):
         raise NotImplementedError

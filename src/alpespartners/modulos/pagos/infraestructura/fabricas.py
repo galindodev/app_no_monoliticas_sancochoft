@@ -18,14 +18,14 @@ from alpespartners.seedwork.infraestructura.schema.v1.eventos import EventoDomin
 from alpespartners.modulos.pagos.dominio.repositorios import RepositorioPagos
 
 from .excepciones import ExcepcionFabrica
-from .repositorios import RepositorioReservasSQLAlchemy
+from .repositorios import RepositorioPagosSQLAlchemy
 
 
 @dataclass
 class FabricaRepositorio(Fabrica):
     def crear_objeto(self, obj: type) -> Repositorio:
         if obj == RepositorioPagos.__class__:
-            return RepositorioReservasSQLAlchemy()
+            return RepositorioPagosSQLAlchemy()
         else:
             raise ExcepcionFabrica()
 
