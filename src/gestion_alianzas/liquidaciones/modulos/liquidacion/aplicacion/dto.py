@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from pagos.seedwork.aplicacion.dto import DTO
+from liquidaciones.seedwork.aplicacion.dto import DTO
 
 
 @dataclass(frozen=True)

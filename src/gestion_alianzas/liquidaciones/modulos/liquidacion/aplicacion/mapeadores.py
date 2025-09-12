@@ -1,9 +1,9 @@
 import uuid
 
-from pagos.seedwork.dominio.repositorios import Mapeador as RepMap
+from liquidaciones.seedwork.dominio.repositorios import Mapeador as RepMap
 
-from pagos.modulos.liquidacion.dominio.entidades import Liquidacion
-from pagos.modulos.liquidacion.dominio.objetos_valor import Monto
+from liquidaciones.modulos.liquidacion.dominio.entidades import Liquidacion
+from liquidaciones.modulos.liquidacion.dominio.objetos_valor import Monto
 
 from .dto import LiquidacionDTO
 
