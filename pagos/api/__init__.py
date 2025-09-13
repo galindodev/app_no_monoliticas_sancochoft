@@ -10,12 +10,10 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 def registrar_handlers():
     import pagos.modulos.pagos.aplicacion
-    import pagos.modulos.liquidacion.aplicacion
 
 
 def importar_modelos_alchemy():
     import pagos.modulos.pagos.infraestructura.dto
-    import pagos.modulos.liquidacion.infraestructura.dto
 
 
 def comenzar_consumidor():
@@ -26,15 +24,12 @@ def comenzar_consumidor():
     """
     import threading
     import pagos.modulos.pagos.infraestructura.consumidores as pagos
-    import pagos.modulos.liquidacion.infraestructura.consumidores as liquidacion
 
     # Suscripción a eventos
     threading.Thread(target=pagos.suscribirse_a_eventos).start()
-    threading.Thread(target=liquidacion.suscribirse_a_eventos).start()
 
     # Suscripción a comandos
     threading.Thread(target=pagos.suscribirse_a_comandos).start()
-    threading.Thread(target=liquidacion.suscribirse_a_comandos).start()
 
 
 def configure_app(configuracion={}):
