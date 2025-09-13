@@ -129,8 +129,8 @@ services:
 
   liquidaciones:
     build:
-      context: ./alpespartners/gestion_alianzas/liquidaciones
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: liquidaciones.Dockerfile
     container_name: liquidaciones
     hostname: liquidaciones
     environment:
@@ -139,14 +139,13 @@ services:
       - POSTGRES_DB=db_liquidaciones
       - POSTGRES_HOST=db_liquidaciones
       - POSTGRES_PORT=5432
-      - GUNICORN_CMD_ARGS="--log-level info --reload"
+      - GUNICORN_CMD_ARGS=--log-level info --reload
     ports:
       - "5001:5000"
     depends_on:
       - db_liquidaciones
     volumes:
-      - ./alpespartners/gestion_alianzas/liquidaciones:/app
-    command: ["gunicorn", "-k", "gevent", "--bind", "0.0.0.0:5000", "src.api:app"]
+      - ./liquidaciones:/app/liquidaciones
     networks:
       - sidecar
     profiles: ["liquidaciones"]
