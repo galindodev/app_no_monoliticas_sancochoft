@@ -1,9 +1,11 @@
+import gevent
 import logging
 from gevent import monkey
 
 monkey.patch_all()
 
-from atribuciones.seedwork.infraestructura.consumidores import Subscriptor
+from atribuciones.modulos.atribucion.infraestructura.consumidores import SuscriptorAgregarAtribucion  # noqa: E402
+from atribuciones.seedwork.infraestructura.consumidores import Subscriptor  # noqa: E402
 
 
 greenlets = []
@@ -21,7 +23,7 @@ def escuchar_mensaje(subscriptor: Subscriptor):
 def post_fork(_, __):
     greenlets.extend([
         # Commands
-        # gevent.spawn(escuchar_mensaje, ...),
+        gevent.spawn(escuchar_mensaje, SuscriptorAgregarAtribucion()),
         # Events
     ])
 

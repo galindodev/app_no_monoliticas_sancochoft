@@ -206,6 +206,7 @@ services:
       - POSTGRES_HOST=db_atribuciones
       - POSTGRES_PORT=5432
       - GUNICORN_CMD_ARGS=--log-level info --reload
+      - BROKER_HOST=broker
     ports:
       - "5003:5000"
     depends_on:
@@ -214,6 +215,7 @@ services:
       - ./atribuciones:/app/atribuciones
     networks:
       - sidecar
+      - pulsar
     profiles: ["atribuciones"]
 
   db_atribuciones:
