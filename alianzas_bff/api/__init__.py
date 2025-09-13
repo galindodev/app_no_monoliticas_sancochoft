@@ -2,7 +2,11 @@ import logging
 
 from flask import Flask
 
+from . import pagos
+
 app = Flask("Alianzas BFF")
+
+app.register_blueprint(pagos.bp)
 
 
 @app.route("/health")
