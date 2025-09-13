@@ -2,26 +2,33 @@ import gevent
 import logging
 from gevent import monkey
 
-from pagos.modulos.pagos.infraestructura.consumidores import SuscriptorSolicitarPago
+from pagos.seedwork.infraestructura.consumidores import Subscriptor
 
 monkey.patch_all()
 
+from pagos.modulos.pagos.infraestructura.consumidores import SubscriptorLiquidacionFinalizada, SuscriptorSolicitarPago
+
 
 greenlets = []
-subscriptors = []
+subscriptors: list[Subscriptor] = []
 
 logger = logging.getLogger("gunicorn.error")
 logging.basicConfig(level=logger.level)
 
 
-def escuchar_comando(subscriptor):
+def escuchar_mensaje(subscriptor: Subscriptor):
     subscriptors.append(subscriptor)
     subscriptor.subscribe()
 
 
 def post_fork(_, __):
-    g1 = gevent.spawn(escuchar_comando, SuscriptorSolicitarPago())
-    greenlets.extend([g1])
+    greenlets.extend([
+        # Commands
+        gevent.spawn(escuchar_mensaje, SuscriptorSolicitarPago()),
+
+        # Events
+        gevent.spawn(escuchar_mensaje, SubscriptorLiquidacionFinalizada()),
+    ])
 
 
 def worker_exit(_, __):
