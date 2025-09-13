@@ -177,3 +177,20 @@ services:
     networks:
       - sidecar
     profiles: ["liquidaciones"]
+
+  alianzas_bff:
+    build:
+      context: .
+      dockerfile: alianzas_bff.Dockerfile
+    container_name: alianzas_bff
+    hostname: alianzas_bff
+    environment:
+      - GUNICORN_CMD_ARGS=--log-level info --reload
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./alianzas_bff:/app/alianzas_bff
+    networks:
+      - sidecar
+      - pulsar
+    profiles: ["alianzas_bff"]
