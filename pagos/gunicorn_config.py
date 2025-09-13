@@ -2,37 +2,25 @@ import gevent
 import logging
 from gevent import monkey
 
+from pagos.modulos.pagos.infraestructura.consumidores import SuscriptorSolicitarPago
+
 monkey.patch_all()
 
 
 greenlets = []
-pulsar_clients = []
+subscriptors = []
 
 logger = logging.getLogger("gunicorn.error")
+logging.basicConfig(level=logger.level)
 
 
-class PulsarClient:
-    def __init__(self, name):
-        logger.info(f"Cliente Pulsar {name} creado")
-
-    def receive(self):
-        logger.info("Escuchando en Pulsar...")
-
-    def close(self): ...
-
-
-def escuchar_comando(topic, sub_name, schema):
-    client = PulsarClient(f"{topic}-{sub_name}")
-    pulsar_clients.append(client)
-
-    while True:
-        client.receive()
-        gevent.sleep(5)
+def escuchar_comando(subscriptor):
+    subscriptors.append(subscriptor)
+    subscriptor.subscribe()
 
 
 def post_fork(_, __):
-    g1 = gevent.spawn(escuchar_comando, "topico-1", "sub1", "schema1")
-
+    g1 = gevent.spawn(escuchar_comando, SuscriptorSolicitarPago())
     greenlets.extend([g1])
 
 
@@ -40,8 +28,5 @@ def worker_exit(_, __):
     for greenlet in greenlets:
         greenlet.kill()
 
-    for cliente in pulsar_clients:
-        try:
-            cliente.close()
-        except Exception as error:
-            logger.error("Error cerrando cliente Pulsar:", error)
+    for subscriptor in subscriptors:
+        subscriptor.unsubscribe()

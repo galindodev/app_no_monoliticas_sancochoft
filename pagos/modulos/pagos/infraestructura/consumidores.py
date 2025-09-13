@@ -1,54 +1,79 @@
+from abc import ABC
 import pulsar, _pulsar
-from pulsar.schema import *
+from pulsar.schema import AvroSchema
 import logging
-import traceback
 
 from pagos.api import configure_app
-from pagos.modulos.pagos.aplicacion.comandos.solicitar_pago import SolicitarPago
 from pagos.modulos.pagos.infraestructura.schema.v1.comandos import ComandoSolicitarPago
-from pagos.seedwork.aplicacion.comandos import ejecutar_commando
 from pagos.seedwork.infraestructura import utils
 
 
-def suscribirse_a_eventos():
-    ...
+class BaseSubscriptor(ABC):
+    topic: str
+    sub_name: str
+    schema: object
+    client: pulsar.Client
 
+    def __init__(self):
+        self.client = pulsar.Client(f'pulsar://{utils.broker_host()}:6650')
+        self.logInfo(f"Cliente Pulsar creado para tópico: '{self.topic}'")
 
-def suscribirse_a_comandos():
-    cliente = None
-    app = configure_app()
+    def subscribe(self):
+        for data in self.suscribirse_a_comandos():
+            self.process_command(data)
 
-    try:
-        cliente = pulsar.Client(f'pulsar://{utils.broker_host()}:6650')
-        consumidor = cliente.subscribe(
-            topic='comandos-pagos',
-            consumer_type=_pulsar.ConsumerType.Shared,
-            subscription_name='alpespartners-pagos-sub-comandos',
-            schema=AvroSchema(ComandoSolicitarPago),
-            negative_ack_redelivery_delay_ms=5000,
-        )
+    def process_command(self, _):
+        raise NotImplementedError()
+
+    def unsubscribe(self):
+        try:
+            self.logInfo(f"Cerrando cliente Pulsar para tópico '{self.topic}'...")
+            self.client.close()
+        except Exception as error:
+            self.logError("Error cerrando cliente Pulsar:", error)
+
+    def suscribirse_a_comandos(self):
+        app = configure_app()
+        try:
+            consumer = self.client.subscribe(
+                topic=self.topic,
+                consumer_type=_pulsar.ConsumerType.Shared,
+                subscription_name=self.sub_name,
+                schema=AvroSchema(self.schema),
+                negative_ack_redelivery_delay_ms=5000,
+            )
+            self.logError(f"Suscrito a tópico: '{self.topic}' con subscripción '{self.sub_name}'")
+        except Exception as error:
+            self.logError("Error suscribiéndose al tópico de comandos:", error)
 
         while True:
-            mensaje = consumidor.receive()
-            data = mensaje.value().data
-            print('============================')
-            print('===== COMANDO - SOLICITAR PAGO =====')
-            print(f'Comando recibido: {data}')
-            print('============================')
-
-            comando = SolicitarPago(id_influencer=data.id_influencer, monto=data.monto)
+            self.logInfo(f" Esperando comandos en tópico '{self.topic}'...")
+            message = consumer.receive()
+            data = message.value().data
+            self.logInfo(f"Comando llegó en tópico '{self.topic}': {data}")
             with app.app_context():
                 try:
-                    ejecutar_commando(comando)
-                    consumidor.acknowledge(mensaje)
+                    yield data
+                    consumer.acknowledge(message)
                 except Exception as error:
-                    print(f'Error al procesar el comando: {error}')
-                    traceback.print_exc()
-                    consumidor.negative_acknowledge(mensaje)
+                    self.logError(f"Error al procesar el comando en {self.topic}: {error}")
+                    consumer.negative_acknowledge(message)
 
-        cliente.close()
-    except:
-        logging.error('ERROR: Suscribiendose al tópico de comandos!')
-        traceback.print_exc()
-        if cliente:
-            cliente.close()
+    def logInfo(self, message: str):
+        logging.info("=================================")
+        logging.info(f"============= {message}")
+        logging.info("=================================")
+
+    def logError(self, message: str):
+        logging.error("=================================")
+        logging.error(message)
+        logging.error("=================================")
+
+
+class SuscriptorSolicitarPago(BaseSubscriptor):
+    topic = "comandos-pagos"
+    sub_name = "alpespartners-pagos-sub-comandos"
+    schema = ComandoSolicitarPago
+
+    def process_command(self, data):
+        self.logInfo(f"Procesando comando: {data}")
