@@ -1,3 +1,4 @@
+import logging
 from random import random
 from dataclasses import dataclass
 
@@ -29,6 +30,7 @@ class LiquidarPagoHandler(ComandoHandler):
         self.fabrica_repositorio = FabricaRepositorio()
 
     def handle(self, comando: LiquidarPago):
+        logging.info(comando)
         liquidacion_dto = LiquidacionDTO(
                 id_pago = comando.id_pago,
                 id_influencer=comando.id_influencer,
