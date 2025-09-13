@@ -80,9 +80,9 @@ services:
       - managedLedgerDefaultAckQuorum=1
       - advertisedAddress=broker
       #Si se realiza una ejecución manual del microservicio desde el IDE, se debe usar esta línea:
-      - advertisedListeners=external:pulsar://127.0.0.1:6650
+      # - advertisedListeners=external:pulsar://127.0.0.1:6650
       #Si se realiza una ejecución completa de todo (incluido el microservicio) con docker compose, se debería usar esta línea en lugar de la anterior para que se comunique con el contenedor broker dentro de una misma ejecución
-      # - advertisedListeners=external:pulsar://broker:6650
+      - advertisedListeners=external:pulsar://broker:6650
     depends_on:
       zookeeper:
         condition: service_healthy
@@ -101,14 +101,42 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=pagos
+      - POSTGRES_DB=db_pagos
+      - POSTGRES_HOST=db_pagos
+      - POSTGRES_PORT=5432
     volumes:
-      - ./data/postgres/pagos:/var/lib/postgresql/data
+      - ./data/postgres/db_pagos:/var/lib/postgresql/data
     ports:
-      - "5433:5432"
+      - "5435:5432"
     networks:
       - sidecar
-    profiles: ["alpespartners", "monolito"]
+    profiles: ["pagos", "monolito"]
+
+  pagos:
+    build:
+      context: .
+      dockerfile: pagos.Dockerfile
+    container_name: pagos
+    hostname: pagos
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=db_pagos
+      - POSTGRES_HOST=db_pagos
+      - POSTGRES_PORT=5432
+      - GUNICORN_CMD_ARGS=--log-level info --reload
+      - BROKER_HOST=broker
+    ports:
+      - "5002:5000"
+    depends_on:
+      - db_pagos
+    volumes:
+      - ./pagos:/app/pagos
+    networks:
+      - sidecar
+      - pulsar
+    profiles: ["pagos", "monolito"]
+
   db_liquidaciones:
     image: postgres:16
     container_name: db_liquidaciones
