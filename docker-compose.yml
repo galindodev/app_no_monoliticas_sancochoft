@@ -186,6 +186,7 @@ services:
     hostname: alianzas_bff
     environment:
       - GUNICORN_CMD_ARGS=--log-level info --reload
+      - BROKER_HOST=broker
     ports:
       - "5000:5000"
     volumes:
