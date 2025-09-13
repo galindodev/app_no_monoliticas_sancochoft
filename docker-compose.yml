@@ -192,3 +192,44 @@ services:
       - sidecar
       - pulsar
     profiles: ["alianzas_bff"]
+
+  atribuciones:
+    build:
+      context: .
+      dockerfile: atribuciones.Dockerfile
+    container_name: atribuciones
+    hostname: atribuciones
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=db_atribuciones
+      - POSTGRES_HOST=db_atribuciones
+      - POSTGRES_PORT=5432
+      - GUNICORN_CMD_ARGS=--log-level info --reload
+    ports:
+      - "5003:5000"
+    depends_on:
+      - db_atribuciones
+    volumes:
+      - ./atribuciones:/app/atribuciones
+    networks:
+      - sidecar
+    profiles: ["atribuciones"]
+
+  db_atribuciones:
+    image: postgres:16
+    container_name: db_atribuciones
+    hostname: db_atribuciones
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=db_atribuciones
+      - POSTGRES_HOST=db_atribuciones
+      - POSTGRES_PORT=5432
+    volumes:
+      - ./data/postgres/db_atribuciones:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    networks:
+      - sidecar
+    profiles: ["alpespartners", "atribuciones"]
