@@ -18,10 +18,10 @@ class BaseSubscriptor(ABC):
         self.logInfo(f"Cliente Pulsar creado para tópico: '{self.topic}'")
 
     def subscribe(self):
-        for data in self.suscribirse_a_comandos():
-            self.process_command(data)
+        for data in self.suscribirse_a_mensajes():
+            self.process_message(data)
 
-    def process_command(self, _):
+    def process_message(self, _):
         raise NotImplementedError()
 
     def unsubscribe(self):
@@ -31,7 +31,7 @@ class BaseSubscriptor(ABC):
         except Exception as error:
             self.logError("Error cerrando cliente Pulsar:", error)
 
-    def suscribirse_a_comandos(self):
+    def suscribirse_a_mensajes(self):
         app = configure_app()
         try:
             consumer = self.client.subscribe(
@@ -43,19 +43,19 @@ class BaseSubscriptor(ABC):
             )
             self.logError(f"Suscrito a tópico: '{self.topic}' con subscripción '{self.sub_name}'")
         except Exception as error:
-            self.logError("Error suscribiéndose al tópico de comandos:", error)
+            self.logError(f"Error suscribiéndose al tópico '{self.topic}':", error)
 
         while True:
-            self.logInfo(f" Esperando comandos en tópico '{self.topic}'...")
+            self.logInfo(f"Esperando mensajes en tópico '{self.topic}'...")
             message = consumer.receive()
             data = message.value().data
-            self.logInfo(f"Comando llegó en tópico '{self.topic}': {data}")
+            self.logInfo(f"Llegó en tópico '{self.topic}': {data}")
             with app.app_context():
                 try:
                     yield data
                     consumer.acknowledge(message)
                 except Exception as error:
-                    self.logError(f"Error al procesar el comando en {self.topic}: {error}")
+                    self.logError(f"Error al procesar el mensaje en {self.topic}: {error}")
                     consumer.negative_acknowledge(message)
 
     def logInfo(self, message: str):
