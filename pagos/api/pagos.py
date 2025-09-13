@@ -16,6 +16,7 @@ from pagos.modulos.pagos.infraestructura.despachadores import Despachador
 bp = api.crear_blueprint('pagos', '/pagos')
 
 
+# TODO: remove this endpoint
 @bp.route('/solicitar-pago-comando', methods=('POST',))
 def solicitar_pago_asincrona():
     try:
