@@ -3,10 +3,12 @@ import logging
 from flask import Flask
 
 from . import pagos
+from . import atribuciones
 
 app = Flask("Alianzas BFF")
 
 app.register_blueprint(pagos.bp)
+app.register_blueprint(atribuciones.bp)
 
 
 @app.route("/health")
