@@ -8,26 +8,13 @@ Repositorio con código base del servicio de pagos. Prueba de concepto.
 
 Los siguientes diagramas son una vista general. Pretender dar una noción de lo que encontrá en el repositorio. Consulte el código fuente para ver más detalles.
 
-<img width="468" src="./docs/arqui_modulos.png" />
+<img width="768" src="./docs/flujo_trabajo.png" />
 
-| Módulo de pagos |
+| Módulos |
 |-----------------------|
-| <img width="468" src="./docs/arqui_pagos.png" />  |
+| <img width="600" src="./docs/arqui_modulos_micros.png" />  |
 
-
-| Módulo de liquidación |
-|-----------------------|
-| <img width="468" src="./docs/arqui_liquidacion.png" />|
-
-| Secuencia - Solicitar un pago |
-|-----------------------|
-| <img width="900" src="./docs/secuencia_solicitar_pago.png" />|
-
-| Secuencia - Liquidación de pagos |
-|-----------------------|
-| <img width="900" src="./docs/secuencia_liquidacion_pagos.png" />|
-
-Este proyecto implementa un servicio bajo una arquitectura de microservicios basada en eventos, siguiendo los principios de Domain-Driven Design (DDD). El objetivo principal es experimentar y validar atributos de calidad relevantes (escalabilidad, disponibilidad y mantenibilidad) mediante escenarios diseñados específicamente para poner a prueba la solución.
+Este proyecto implementa un 4 servicios bajo una arquitectura de microservicios basada en eventos, siguiendo los principios de Domain-Driven Design (DDD). El objetivo principal es experimentar y validar atributos de calidad relevantes (escalabilidad, disponibilidad y mantenibilidad) mediante escenarios diseñados específicamente para poner a prueba la solución.
 
 La comunicación entre los módulos se realiza exclusivamente a través de eventos de dominio, apoyados en un broker de mensajería para garantizar el desacoplamiento, la asincronía y la tolerancia a fallos. Asimismo, se aplican patrones como CQS e inyección de dependencias.
 
@@ -72,31 +59,16 @@ A continuación, se describen los escenarios de calidad seleccionados, junto con
 ## Estructura del proyecto
 
 ```sh
-src
-└── alpespartners
-    ├── api
-    │   └── pagos.py
-    ├── config
-    ├── modulos
-    │   ├── liquidacion
-    │   │   ├── aplicacion
-    │   │   ├── dominio
-    │   │   └── infraestructura
-    │   └── pagos
-    │       ├── aplicacion
-    │       ├── dominio
-    │       └── infraestructura
-    └── seedwork
-        ├── aplicacion
-        ├── dominio
-        ├── infraestructura
-        └── presentacion
+├── alianzas_bff
+├── atribuciones
+├── liquidaciones
+└── pagos
 ```
 
-- `src/alpespartners/api`: En este módulo está la API en Flask. Es el punto de entrada a todo el servicio.
-- `src/alpespartners/modulos/liquidacion`: Módulo de liquidación. Encargado de comunicarse con sistemas externos que gestionan el pago de los clientes.
-- `src/alpespartners/modulos/pagos`: Módulo de pagos. Encargando de gestionar los pagos a los clientes.
-- `src/alpespartners/seedwork`: Definiciones generales usados por los módulos del servicio.
+- `alianzas_bff`: Backend for Frontend de Alianzas. Es el punto de entrada de la aplicación.
+- `atribuciones`: Microservicio de atribuciones. Encargado de administrar las atribuciones de influencers.
+- `liquidaciones`: Microservicio de liquidaciones. Simula la comunicación con servicios externos para pagos.
+- `pagos`: Microservicio de pagos. Encargada de gestionar los pagos de las atribuciones.
 
 ## AlpesPartners
 
@@ -112,36 +84,30 @@ En una terminal, ejecute:
 docker compose --profile pulsar up
 ```
 
-En otra terminal levante la base de datos:
+### Iniciar servicios
+
+1. Levante el servicio de pagos
 
 ```bash
-docker compose --profile alpespartners up
+docker compose --profile pagos up
 ```
 
-### Iniciar API
-
-1. Cree un entorno virtual de Python
+2. Levante el servicio de liquidaciones
 
 ```bash
-python3 -m venv env
+docker compose --profile liquidaciones up
 ```
 
-2. Active el entorno virtual
+3. Levante el servicio de atribuciones
 
 ```bash
-source env/bin/activate
+docker compose --profile atribuciones up
 ```
 
-3. Instale dependencias
+4. Inicie el BFF
 
 ```bash
-pip install -r requirements.txt
-```
-
-4. Inicie la API
-
-```bash
-flask --app src/alpespartners/api run
+docker compose --profile alianzas_bff up
 ```
 
 ### Colección de Postman

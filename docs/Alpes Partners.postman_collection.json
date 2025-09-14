@@ -7,71 +7,361 @@
 	},
 	"item": [
 		{
-			"name": "Solicitar pago",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"id_influencer\": \"{{$randomUUID}}\",\n    \"monto\": 1000\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "Pagos",
+			"item": [
+				{
+					"name": "Obtener pagos pendientes",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id_influencer\": \"{{$randomUUID}}\",\n    \"monto\": 1000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/pagos/obtener-pagos-pendientes",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"pagos",
+								"obtener-pagos-pendientes"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://127.0.0.1:5000/pagos/solicitar-pago-comando",
-					"protocol": "http",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "5000",
-					"path": [
-						"pagos",
-						"solicitar-pago-comando"
-					]
+				{
+					"name": "Solicitar pago",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id_influencer\": \"{{idInfluencer}}\",\n    \"monto\": 99000,\n    \"id_programa\": \"{{idProgramaAtribucion}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/pagos/solicitar-pago-comando",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"pagos",
+								"solicitar-pago-comando"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{pagosUrl}}/health",
+							"host": [
+								"{{pagosUrl}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Obtener pagos pendientes",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"id_influencer\": \"{{$randomUUID}}\",\n    \"monto\": 1000\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "Liquidaciones",
+			"item": [
+				{
+					"name": "Liquidar pago",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id_pago\": \"{{$randomUUID}}\",\n    \"id_influencer\": \"{{$randomUUID}}\",\n    \"monto\": {{$randomPrice}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{liquidacionesUrl}}/liquidaciones",
+							"host": [
+								"{{liquidacionesUrl}}"
+							],
+							"path": [
+								"liquidaciones"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://127.0.0.1:5000/pagos/obtener-pagos-pendientes",
-					"protocol": "http",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "5000",
-					"path": [
-						"pagos",
-						"obtener-pagos-pendientes"
-					]
+				{
+					"name": "Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{liquidacionesUrl}}/health",
+							"host": [
+								"{{liquidacionesUrl}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "Alianzas BFF",
+			"item": [
+				{
+					"name": "Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{alianzasBffUrl}}/health",
+							"host": [
+								"{{alianzasBffUrl}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Solicitar pago",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id_influencer\": \"{{idInfluencer}}\",\n    \"monto\": {{$randomPrice}},\n    \"id_programa\": \"{{idProgramaAtribucion}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{alianzasBffUrl}}/pagos",
+							"host": [
+								"{{alianzasBffUrl}}"
+							],
+							"path": [
+								"pagos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Agregar atribución",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id_programa\": \"{{idProgramaAtribucion}}\",\n    \"evento\": \"CLIC\",\n    \"monto\": {{$randomPrice}},\n    \"moneda\": \"USD\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{alianzasBffUrl}}/atribuciones",
+							"host": [
+								"{{alianzasBffUrl}}"
+							],
+							"path": [
+								"atribuciones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener atribuciones",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{alianzasBffUrl}}/atribuciones/{{idProgramaAtribucion}}",
+							"host": [
+								"{{alianzasBffUrl}}"
+							],
+							"path": [
+								"atribuciones",
+								"{{idProgramaAtribucion}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pulsar",
+			"item": [
+				{
+					"name": "Get Schema",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{pulsarAdminUrl}}/admin/v2/schemas/public/default/eventos-pago-pagado/schema",
+							"host": [
+								"{{pulsarAdminUrl}}"
+							],
+							"path": [
+								"admin",
+								"v2",
+								"schemas",
+								"public",
+								"default",
+								"eventos-pago-pagado",
+								"schema"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Atribuciones",
+			"item": [
+				{
+					"name": "Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{atribucionesUrl}}/health",
+							"host": [
+								"{{atribucionesUrl}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Agregar atribución",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id_programa\": \"{{idProgramaAtribucion}}\",\n    \"evento\": \"CLIC\",\n    \"monto\": {{$randomPrice}},\n    \"moneda\": \"USD\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{atribucionesUrl}}/atribuciones",
+							"host": [
+								"{{atribucionesUrl}}"
+							],
+							"path": [
+								"atribuciones"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "liquidacionesUrl",
+			"value": ""
+		},
+		{
+			"key": "alianzasBffUrl",
+			"value": ""
+		},
+		{
+			"key": "pulsarAdminUrl",
+			"value": ""
+		},
+		{
+			"key": "atribucionesUrl",
+			"value": ""
+		},
+		{
+			"key": "idProgramaAtribucion",
+			"value": ""
+		},
+		{
+			"key": "pagosUrl",
+			"value": ""
+		},
+		{
+			"key": "idInfluencer",
+			"value": ""
 		}
 	]
 }
