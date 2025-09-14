@@ -58,23 +58,23 @@ class CommandSubscriptor(Subscriptor, ABC):
         except Exception as error:
             self.logError(f"Error suscribiéndose al tópico '{self.topic}':", error)
 
-            while True:
-                self.logInfo(f"Esperando mensajes en tópico '{self.topic}'...")
-                try:
-                    message = consumer.receive(timeout_millis=1000)
-                    if message:
-                        data = message.value().data
-                        self.logInfo(f"Llegó en tópico '{self.topic}': {data}")
-                        with app.app_context():
-                            try:
-                                yield data
-                                consumer.acknowledge(message)
-                            except Exception as error:
-                                self.logError(f"Error al procesar el mensaje en {self.topic}: {error}")
-                                consumer.negative_acknowledge(message)
-                except _pulsar.Timeout:
-                    pass
-                gevent.sleep(0)
+        self.logInfo(f"Esperando mensajes en tópico '{self.topic}'...")
+        while True:
+            try:
+                message = consumer.receive(timeout_millis=1000)
+                if message:
+                    data = message.value().data
+                    self.logInfo(f"Llegó en tópico '{self.topic}': {data}")
+                    with app.app_context():
+                        try:
+                            yield data
+                            consumer.acknowledge(message)
+                        except Exception as error:
+                            self.logError(f"Error al procesar el mensaje en {self.topic}: {error}")
+                            consumer.negative_acknowledge(message)
+            except _pulsar.Timeout:
+                pass
+            gevent.sleep(0)
 
     def logInfo(self, message: str):
         logging.info("=================================")
@@ -132,8 +132,8 @@ class EventSubscriptor(Subscriptor, ABC):
         except Exception as error:
             self.logError(f"Error suscribiéndose al tópico '{self.topic}':", error)
 
+        self.logInfo(f"Esperando mensajes en tópico '{self.topic}'...")
         while True:
-            self.logInfo(f"Esperando mensajes en tópico '{self.topic}'...")
             try:
                 message = consumer.receive(timeout_millis=1000)
                 if message:
