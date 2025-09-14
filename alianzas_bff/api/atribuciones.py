@@ -1,4 +1,7 @@
+import os
 import uuid
+
+import requests
 from flask import Blueprint, request
 
 from alianzas_bff.infraestructura import utils
@@ -29,3 +32,11 @@ def agregar_atribucion():
     despachador = Despachador()
     despachador.publicar_mensaje(comando, topico="comandos-atribuciones")
     return dict(message="Solicitud de atribución enviada.", payload=payload), 202
+
+
+@bp.get('/<string:id_programa>')
+def obtener_atribuciones(id_programa):
+    """Endpoint para obtener una atribución por ID de programa."""
+    atribuciones_url = f"http://{os.getenv("ATRIBUCIONES_HOST")}/atribuciones/{id_programa}"
+    json = requests.get(atribuciones_url, timeout=15).json()
+    return json, 200
