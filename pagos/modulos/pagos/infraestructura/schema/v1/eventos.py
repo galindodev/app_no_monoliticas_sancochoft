@@ -10,3 +10,23 @@ class EventoPagoSolicitadoPayload(Record):
 
 class EventoPagoSolicitado(EventoIntegracion):
     data = EventoPagoSolicitadoPayload()
+
+
+class EventoPagoPagadoPayload(Record):
+    id_pago = String()
+    id_influencer = String()
+    id_programa = String()
+
+
+class EventoPagoPagado(EventoIntegracion):
+    data = EventoPagoPagadoPayload()
+
+
+class EventoPagoRechazadoPayload(Record):
+    id_pago = String()
+    id_influencer = String()
+    id_programa = String()
+
+
+class EventoPagoRechazado(EventoIntegracion):
+    data = EventoPagoRechazadoPayload()

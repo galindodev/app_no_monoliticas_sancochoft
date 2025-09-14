@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 
 from pagos.seedwork.dominio.entidades import AgregacionRaiz
 
-from .eventos import PagoSolicitado
+from .eventos import PagoSolicitado, PagoPagado, PagoRechazado
 from .objetos_valor import Monto, EstadoPago
 
 
@@ -27,5 +27,18 @@ class Pago(AgregacionRaiz):
         evento = PagoSolicitado(id_pago=self.id, id_influencer=self.id_influencer, monto=self.monto.valor)
         self.agregar_evento(evento)
 
-    def finalizar(self):
+    def finalizar(self, pagado: bool):
+        if pagado:
+            self._pagar()
+        else:
+            self._rechazar()
+
+    def _pagar(self):
         self.estado = EstadoPago.PAGADO
+        evento = PagoPagado(id_pago=self.id, id_influencer=self.id_influencer, id_programa=self.id_programa)
+        self.agregar_evento(evento)
+
+    def _rechazar(self):
+        self.estado = EstadoPago.RECHAZADO
+        evento = PagoRechazado(id_pago=self.id, id_influencer=self.id_influencer, id_programa=self.id_programa)
+        self.agregar_evento(evento)

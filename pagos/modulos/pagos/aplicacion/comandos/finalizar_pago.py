@@ -29,10 +29,11 @@ class FinalizarPagoHandler(ComandoHandler):
     def handle(self, comando: FinalizarPago):
         pago: Pago = self.repositorio.obtener_por_id(UUID(comando.id_pago))
 
-        pago.finalizar()
+        pago.finalizar(pagado=comando.pagado)
 
         UnidadTrabajoPuerto.registrar_batch(self.repositorio.actualizar, pago)
         UnidadTrabajoPuerto.savepoint()
+        UnidadTrabajoPuerto.commit()
 
 
 @comando.register(FinalizarPago)
