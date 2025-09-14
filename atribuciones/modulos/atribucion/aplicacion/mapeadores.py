@@ -1,5 +1,5 @@
+import uuid
 
-from atribuciones.seedwork.aplicacion.dto import Mapeador as AppMap
 from atribuciones.seedwork.dominio.repositorios import Mapeador as RepMap
 
 from atribuciones.modulos.atribucion.dominio.entidades import Atribucion, ProgramaAtribucion
@@ -19,17 +19,17 @@ class MapeadorProgramaAtribucion(RepMap):
         atribuciones = [self.mapeador_atribucion.entidad_a_dto(atr) for atr in entidad.atribuciones]
 
         return ProgramaAtribucionDTO(
-            id_programa=str(entidad.id),
             atribuciones=atribuciones,
+            id_socio=str(entidad.id_socio),
         )
 
     def dto_a_entidad(self, dto: ProgramaAtribucionDTO) -> ProgramaAtribucion:
-        atribuciones = [self.mapeador_atribucion.dto_a_entidad(atr) for atr in dto.atribuciones]
+        programa = ProgramaAtribucion()
+        programa.id_socio = uuid.UUID(dto.id_socio)
 
-        return ProgramaAtribucion(
-            id_programa=dto.id_programa,
-            atribuciones=atribuciones,
-        )
+        programa.atribuciones = [self.mapeador_atribucion.dto_a_entidad(atr) for atr in dto.atribuciones]
+
+        return programa
 
 
 class MapeadorAtribucion(RepMap):

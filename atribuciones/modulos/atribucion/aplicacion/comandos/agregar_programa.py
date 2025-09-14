@@ -1,7 +1,7 @@
-import logging
 from dataclasses import dataclass
-from uuid import UUID
 
+from atribuciones.modulos.atribucion.aplicacion.dto import ProgramaAtribucionDTO
+from atribuciones.modulos.atribucion.aplicacion.mapeadores import MapeadorProgramaAtribucion
 from atribuciones.modulos.atribucion.dominio.repositorios import RepositorioProgramaAtribucion
 from atribuciones.seedwork.aplicacion.comandos import Comando
 from atribuciones.seedwork.aplicacion.comandos import ComandoHandler
@@ -15,29 +15,28 @@ from atribuciones.modulos.atribucion.infraestructura.fabricas import ProgramaFab
 
 
 @dataclass
-class CompletarPrograma(Comando):
-    id_programa: str
+class AgregarPrograma(Comando):
     id_socio: str
 
 
-class CompletarProgramaHandler(ComandoHandler):
+class AgregarProgramaHandler(ComandoHandler):
     def __init__(self):
         self.fabrica_programa_atribucion = FabricaProgramaAtribucion()
         self.fabrica_repositorio = ProgramaFabricaRepositorio()
         self.repositorio: RepositorioProgramaAtribucion = self.fabrica_repositorio.crear_objeto(ProgramaFabricaRepositorio.__class__)
 
-    def handle(self, comando: CompletarPrograma):
-        logging.info(comando)
-        programa: ProgramaAtribucion = self.repositorio.obtener_por_id(UUID(comando.id_programa))
+    def handle(self, comando: AgregarPrograma):
+        programa_dto = ProgramaAtribucionDTO(id_socio=comando.id_socio, atribuciones=[])
+        programa: ProgramaAtribucion = self.fabrica_programa_atribucion.crear_objeto(programa_dto, MapeadorProgramaAtribucion())
 
-        programa.completar()
-
-        UnidadTrabajoPuerto.registrar_batch(self.repositorio.actualizar, programa)
+        UnidadTrabajoPuerto.registrar_batch(self.repositorio.agregar, programa)
         UnidadTrabajoPuerto.savepoint()
         UnidadTrabajoPuerto.commit()
 
+        return str(programa.id)
 
-@comando.register(CompletarPrograma)
-def ejecutar_comando_comnpletar_programa(comando: CompletarPrograma):
-    handler = CompletarProgramaHandler()
-    handler.handle(comando)
+
+@comando.register(AgregarPrograma)
+def ejecutar_comando_agregar_programa(comando: AgregarPrograma):
+    handler = AgregarProgramaHandler()
+    return handler.handle(comando)

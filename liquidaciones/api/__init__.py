@@ -16,7 +16,7 @@ app = create_app("Liquidaciones")
 
 @app.route("/health")
 def health():
-    return {"status": "up!"}
+    return {"status": "up!", "app": app.name}
 
 
 @app.post("/liquidaciones")

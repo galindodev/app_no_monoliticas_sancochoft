@@ -67,6 +67,6 @@ def create_app():
 
     @app.route("/health")
     def health():
-        return { "status": "up" }
+        return { "status": "up", "app": app.name }
 
     return app

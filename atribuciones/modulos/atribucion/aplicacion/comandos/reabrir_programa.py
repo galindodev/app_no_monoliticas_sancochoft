@@ -29,7 +29,7 @@ class ReabrirProgramaHandler(ComandoHandler):
         logging.info(comando)
         programa: ProgramaAtribucion = self.repositorio.obtener_por_id(UUID(comando.id_programa))
 
-        programa.reabrir(programa)
+        programa.reabrir()
 
         UnidadTrabajoPuerto.registrar_batch(self.repositorio.actualizar, programa)
         UnidadTrabajoPuerto.savepoint()

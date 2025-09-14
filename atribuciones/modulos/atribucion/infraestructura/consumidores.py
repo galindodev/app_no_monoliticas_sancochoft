@@ -4,7 +4,7 @@ from atribuciones.modulos.atribucion.aplicacion.comandos.reabrir_programa import
 
 from atribuciones.modulos.atribucion.infraestructura.schema.v1.comandos import ComandoAgregarAtribucion
 from atribuciones.seedwork.aplicacion.comandos import ejecutar_commando
-from atribuciones.seedwork.infraestructura.consumidores import CommandSubscriptor
+from atribuciones.seedwork.infraestructura.consumidores import CommandSubscriptor, EventSubscriptor
 
 
 class SuscriptorAgregarAtribucion(CommandSubscriptor):
@@ -21,7 +21,7 @@ class SuscriptorAgregarAtribucion(CommandSubscriptor):
         ejecutar_commando(agregar_atribucion)
 
 
-class SuscriptorPagoPagado(CommandSubscriptor):
+class SuscriptorPagoPagado(EventSubscriptor):
     topic = "eventos-pago-pagado"
     sub_name = "eventos-pagos-pagados-a-atribuciones"
 
@@ -29,12 +29,12 @@ class SuscriptorPagoPagado(CommandSubscriptor):
         self.logInfo(f"📥 Evento de pago pagado recibido: {data}")
         completar_programa = CompletarPrograma(
             id_programa=data.id_programa,
-            id_pago=data.id_pago
+            id_socio=data.id_influencer
         )
         ejecutar_commando(completar_programa)
 
 
-class SuscriptorPagoRechazado(CommandSubscriptor):
+class SuscriptorPagoRechazado(EventSubscriptor):
     topic = "eventos-pago-rechazado"
     sub_name = "eventos-pagos-rechazados-a-atribuciones"
 

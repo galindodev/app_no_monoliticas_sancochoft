@@ -1,5 +1,6 @@
 import time
 from abc import ABC
+from types import SimpleNamespace
 import pulsar
 import _pulsar
 import logging
@@ -55,7 +56,8 @@ class EventSubscriptor(Subscriptor, ABC):
             try:
                 message = consumer.receive(timeout_millis=1000)
                 if message:
-                    data = message.value().data
+                    value = message.value()
+                    data = SimpleNamespace(**value['data'])
                     self.logInfo(f"Llegó en tópico '{self.topic}': {data}")
                     with app.app_context():
                         try:

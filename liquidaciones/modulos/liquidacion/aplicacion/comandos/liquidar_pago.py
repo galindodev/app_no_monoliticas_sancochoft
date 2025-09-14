@@ -1,5 +1,4 @@
 import logging
-from random import random
 from dataclasses import dataclass
 
 from liquidaciones.modulos.liquidacion.dominio.excepciones import LiquidaRechazadaExcepcion
@@ -50,7 +49,7 @@ class LiquidarPagoHandler(ComandoHandler):
 
     def simular_pago(self):
         ''' Simula la aprobacion o rechazo del pago. Retorna True si se aprueba, False si se rechaza.'''
-        return random() > 0.5
+        return True
 
 
 @comando.register(LiquidarPago)

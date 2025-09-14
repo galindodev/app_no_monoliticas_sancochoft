@@ -3,6 +3,7 @@ from abc import ABC
 import pulsar
 import _pulsar
 import logging
+from types import SimpleNamespace
 
 from liquidaciones.api import create_app
 from liquidaciones.seedwork.infraestructura import utils
@@ -54,7 +55,8 @@ class EventSubscriptor(Subscriptor, ABC):
             try:
                 message = consumer.receive(timeout_millis=1000)
                 if message:
-                    data = message.value().data
+                    value = message.value()
+                    data = SimpleNamespace(**value['data'])
                     self.logInfo(f"Llegó en tópico '{self.topic}': {data}")
                     with app.app_context():
                         try:

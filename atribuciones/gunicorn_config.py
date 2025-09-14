@@ -1,7 +1,7 @@
 import logging
 from threading import Thread
 
-from atribuciones.modulos.atribucion.infraestructura.consumidores import SuscriptorAgregarAtribucion
+from atribuciones.modulos.atribucion.infraestructura.consumidores import SuscriptorAgregarAtribucion, SuscriptorPagoPagado, SuscriptorPagoRechazado
 from atribuciones.seedwork.infraestructura.consumidores import Subscriptor
 from atribuciones.seedwork.infraestructura.utils import register_esquemas
 
@@ -19,3 +19,7 @@ def post_fork(_, __):
 
     # Comandos
     Thread(target=escuchar_mensaje, args=(SuscriptorAgregarAtribucion(),), daemon=True).start()
+
+    # Eventos
+    Thread(target=escuchar_mensaje, args=(SuscriptorPagoPagado(),), daemon=True).start()
+    Thread(target=escuchar_mensaje, args=(SuscriptorPagoRechazado(),), daemon=True).start()
