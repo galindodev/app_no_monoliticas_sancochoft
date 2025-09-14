@@ -11,7 +11,11 @@ class SuscriptorSolicitarPago(CommandSubscriptor):
     schema = ComandoSolicitarPago
 
     def process_message(self, data):
-        solicitar_pago = SolicitarPago(id_influencer=data.id_influencer, monto=data.monto)
+        solicitar_pago = SolicitarPago(
+            id_influencer=data.id_influencer,
+            monto=data.monto,
+            id_programa=data.id_programa,
+        )
         ejecutar_commando(solicitar_pago)
 
 

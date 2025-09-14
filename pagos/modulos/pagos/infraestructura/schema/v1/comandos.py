@@ -5,6 +5,7 @@ from pagos.seedwork.infraestructura.schema.v1.comandos import (ComandoIntegracio
 class ComandoSolicitarPagoPayload(ComandoIntegracion):
     id_influencer = String()
     monto = Float()
+    id_programa = String()
 
 
 class ComandoSolicitarPago(ComandoIntegracion):
