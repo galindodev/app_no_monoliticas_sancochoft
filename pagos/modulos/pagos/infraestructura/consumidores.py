@@ -6,7 +6,7 @@ from pagos.seedwork.infraestructura.consumidores import CommandSubscriptor, Even
 
 
 class SuscriptorSolicitarPago(CommandSubscriptor):
-    topic = "comandos-pagos"
+    topic = "comandos-solicitar-pago"
     sub_name = "alpespartners-pagos-sub-comandos"
     schema = ComandoSolicitarPago
 

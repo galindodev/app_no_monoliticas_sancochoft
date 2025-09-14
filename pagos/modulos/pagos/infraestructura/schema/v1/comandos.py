@@ -1,4 +1,4 @@
-from pulsar.schema import *
+from pulsar.schema import String, Float
 from pagos.seedwork.infraestructura.schema.v1.comandos import (ComandoIntegracion)
 
 

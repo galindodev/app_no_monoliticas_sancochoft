@@ -9,6 +9,7 @@ from pagos.seedwork.infraestructura import utils
 
 class BaseDispatcher:
     topic: str
+    schema: object
 
     def handle(self, evento: EventoDominio):
         name = evento.__class__.__name__
