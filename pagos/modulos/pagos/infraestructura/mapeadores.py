@@ -27,6 +27,7 @@ class MapeadorPago(Mapeador):
         pago_dto.id_influencer = str(entidad.id_influencer)
         pago_dto.monto = float(entidad.monto.valor)
         pago_dto.estado = str(entidad.estado.name)
+        pago_dto.id_programa = str(entidad.id_programa)
         return pago_dto
 
     def dto_a_entidad(self, dto: PagoDTO) -> Pago:
@@ -36,5 +37,6 @@ class MapeadorPago(Mapeador):
         pago.id_influencer = uuid.UUID(dto.id_influencer)
         pago.monto = Monto(dto.monto)
         pago.estado = EstadoPago[dto.estado]
+        pago.id_programa = uuid.UUID(dto.id_programa)
 
         return pago

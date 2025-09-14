@@ -7,3 +7,4 @@ class PagoDTO(DTO):
     id_influencer: str = field(default_factory=str)
     monto: float = field(default_factory=float)
     estado: str = field(default_factory=str)
+    id_programa: str = field(default_factory=str)

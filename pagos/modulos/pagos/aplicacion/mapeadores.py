@@ -16,13 +16,14 @@ class MapeadorPago(RepMap):
     def entidad_a_dto(self, entidad: Pago) -> PagoDTO:
         id_influencer = str(entidad.id_influencer)
         monto = entidad.monto.valor
-        return PagoDTO(id_influencer, monto, estado=entidad.estado.value)
+        return PagoDTO(id_influencer, monto, estado=entidad.estado.value, id_programa=str(entidad.id_programa))
 
     def dto_a_entidad(self, dto: PagoDTO) -> Pago:
         pago = Pago()
         pago.id_influencer = uuid.UUID(dto.id_influencer)
         pago.monto = Monto(dto.monto)
         pago.estado = EstadoPago[dto.estado]
+        pago.id_programa = uuid.UUID(dto.id_programa)
         return pago
 
 
@@ -32,6 +33,7 @@ class MapeadorPagoDTOJson(AppMap):
             id_influencer=externo.get("id_influencer", None),
             monto=float(externo.get("monto", None)),
             estado=None,
+            id_programa=externo.get("id_programa", None)
         )
         return pago_dto
 

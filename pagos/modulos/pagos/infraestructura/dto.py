@@ -19,3 +19,4 @@ class Pago(db.Model):
     id_influencer = db.Column(db.String, nullable=True, index=True)
     monto = db.Column(db.Float, nullable=False)
     estado = db.Column(db.Enum(EstadoPago), nullable=False)
+    id_programa = db.Column(db.String, nullable=True, index=True)

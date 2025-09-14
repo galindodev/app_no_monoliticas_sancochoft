@@ -17,6 +17,7 @@ class Pago(AgregacionRaiz):
     id_influencer: uuid.UUID = field(hash=True, default=None)
     monto: Monto = field(default_factory=Monto)
     estado: EstadoPago = field(default=None)
+    id_programa: uuid.UUID = field(default=None)
 
     def solicitar(self, pago: Pago):
         self.id_influencer = pago.id_influencer

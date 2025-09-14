@@ -19,6 +19,7 @@ from pagos.modulos.pagos.infraestructura.fabricas import FabricaRepositorio
 class SolicitarPago(Comando):
     id_influencer: str
     monto: float
+    id_programa: str
 
 
 class SolicitarPagoHandler(ComandoHandler):
@@ -30,7 +31,8 @@ class SolicitarPagoHandler(ComandoHandler):
         pago_dto = PagoDTO(
                 id_influencer=comando.id_influencer,
                 monto=comando.monto,
-                estado=EstadoPago.CREADO.value)
+                estado=EstadoPago.CREADO.value,
+                id_programa=comando.id_programa)
 
         pago: Pago = self.fabrica_pagos.crear_objeto(pago_dto, MapeadorPago())
         pago.solicitar(pago)
