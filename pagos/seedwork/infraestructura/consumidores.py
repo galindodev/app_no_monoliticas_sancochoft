@@ -1,3 +1,4 @@
+import gevent
 from abc import ABC
 import pulsar, _pulsar
 from pulsar.schema import AvroSchema
@@ -57,18 +58,23 @@ class CommandSubscriptor(Subscriptor, ABC):
         except Exception as error:
             self.logError(f"Error suscribiéndose al tópico '{self.topic}':", error)
 
-        while True:
-            self.logInfo(f"Esperando mensajes en tópico '{self.topic}'...")
-            message = consumer.receive()
-            data = message.value().data
-            self.logInfo(f"Llegó en tópico '{self.topic}': {data}")
-            with app.app_context():
+            while True:
+                self.logInfo(f"Esperando mensajes en tópico '{self.topic}'...")
                 try:
-                    yield data
-                    consumer.acknowledge(message)
-                except Exception as error:
-                    self.logError(f"Error al procesar el mensaje en {self.topic}: {error}")
-                    consumer.negative_acknowledge(message)
+                    message = consumer.receive(timeout_millis=1000)
+                    if message:
+                        data = message.value().data
+                        self.logInfo(f"Llegó en tópico '{self.topic}': {data}")
+                        with app.app_context():
+                            try:
+                                yield data
+                                consumer.acknowledge(message)
+                            except Exception as error:
+                                self.logError(f"Error al procesar el mensaje en {self.topic}: {error}")
+                                consumer.negative_acknowledge(message)
+                except _pulsar.Timeout:
+                    pass
+                gevent.sleep(0)
 
     def logInfo(self, message: str):
         logging.info("=================================")
@@ -128,16 +134,21 @@ class EventSubscriptor(Subscriptor, ABC):
 
         while True:
             self.logInfo(f"Esperando mensajes en tópico '{self.topic}'...")
-            message = consumer.receive()
-            data = message.value().data
-            self.logInfo(f"Llegó en tópico '{self.topic}': {data}")
-            with app.app_context():
-                try:
-                    yield data
-                    consumer.acknowledge(message)
-                except Exception as error:
-                    self.logError(f"Error al procesar el mensaje en {self.topic}: {error}")
-                    consumer.negative_acknowledge(message)
+            try:
+                message = consumer.receive(timeout_millis=1000)
+                if message:
+                    data = message.value().data
+                    self.logInfo(f"Llegó en tópico '{self.topic}': {data}")
+                    with app.app_context():
+                        try:
+                            yield data
+                            consumer.acknowledge(message)
+                        except Exception as error:
+                            self.logError(f"Error al procesar el mensaje en {self.topic}: {error}")
+                            consumer.negative_acknowledge(message)
+            except _pulsar.Timeout:
+                pass
+            gevent.sleep(0)
 
     def logInfo(self, message: str):
         logging.info("=================================")

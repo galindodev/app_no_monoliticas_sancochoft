@@ -34,6 +34,7 @@ def post_fork(_, __):
 def worker_exit(_, __):
     for greenlet in greenlets:
         greenlet.kill()
+        greenlet.join(timeout=15)
 
     for subscriptor in subscriptors:
         subscriptor.unsubscribe()
