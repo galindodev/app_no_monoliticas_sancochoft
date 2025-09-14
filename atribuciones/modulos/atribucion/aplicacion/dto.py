@@ -14,3 +14,9 @@ class AtribucionDTO(DTO):
 class ProgramaAtribucionDTO(DTO):
     id_programa: str = field(default_factory=str)
     atribuciones: list[AtribucionDTO] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class ProgramaAtribucionCompletadoDTO(DTO):
+    id_programa: str = field(default_factory=str)
+    id_socio: str = field(default_factory=str)

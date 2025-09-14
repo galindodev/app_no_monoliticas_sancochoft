@@ -1,9 +1,11 @@
+import time
 from abc import ABC
-import pulsar, _pulsar
-from pulsar.schema import AvroSchema
+import pulsar
+import _pulsar
 import logging
+from pulsar.schema import AvroSchema
 
-from atribuciones.api.app import create_app
+from atribuciones.api import create_app
 from atribuciones.seedwork.infraestructura import utils
 
 
@@ -18,11 +20,11 @@ class Subscriptor(ABC):
         raise NotImplementedError
 
 
-class CommandSubscriptor(Subscriptor, ABC):
+class EventSubscriptor(Subscriptor, ABC):
     topic: str
     sub_name: str
-    schema: object
     client: pulsar.Client
+    max_retries: int = 20
 
     def __init__(self):
         self.client = pulsar.Client(f'pulsar://{utils.broker_host()}:6650')
@@ -44,18 +46,9 @@ class CommandSubscriptor(Subscriptor, ABC):
 
     def suscribirse_a_mensajes(self):
         app = create_app("Atribuciones")
-        self.logInfo(f"⏱️ Suscribiendo a tópico '{self.topic}'...")
-        try:
-            consumer = self.client.subscribe(
-                topic=self.topic,
-                consumer_type=_pulsar.ConsumerType.Shared,
-                subscription_name=self.sub_name,
-                schema=AvroSchema(self.schema),
-                negative_ack_redelivery_delay_ms=5000,
-            )
-            self.logInfo(f"Suscrito a tópico: '{self.topic}' con subscripción '{self.sub_name}'")
-        except Exception as error:
-            self.logError(f"Error suscribiéndose al tópico '{self.topic}':", error)
+
+        consumer = self.obtener_consumidor()
+        self.logError(f"Suscrito a tópico: '{self.topic}' con subscripción '{self.sub_name}'")
 
         self.logInfo(f"Esperando mensajes en tópico '{self.topic}'...")
         while True:
@@ -73,6 +66,28 @@ class CommandSubscriptor(Subscriptor, ABC):
                             consumer.negative_acknowledge(message)
             except _pulsar.Timeout:
                 pass
+
+    def obtener_consumidor(self):
+        schema = f"public/default/{self.topic}"
+        retries = 0
+        while True:
+            if retries >= self.max_retries:
+                self.logError(f"No se pudo suscribir al tópico '{self.topic}' después de {self.max_retries} intentos.")
+                raise Exception(f"No se pudo suscribir al tópico '{self.topic}' después de {self.max_retries} intentos.")
+            retries += 1
+            try:
+                json_schema = utils.consultar_schema_registry(schema)
+                avro_schema = utils.obtener_schema_avro_de_diccionario(json_schema)
+                return self.client.subscribe(
+                    topic=self.topic,
+                    consumer_type=_pulsar.ConsumerType.Shared,
+                    subscription_name=self.sub_name,
+                    schema=avro_schema,
+                    negative_ack_redelivery_delay_ms=5000,
+                )
+            except Exception as error:
+                self.logError(f"Error suscribiéndose al tópico '{self.topic}'. Intento {retries}:", error)
+            time.sleep(5)
 
     def logInfo(self, message: str):
         logging.info("=================================")
@@ -85,17 +100,18 @@ class CommandSubscriptor(Subscriptor, ABC):
         logging.error("=================================")
 
 
-class EventSubscriptor(Subscriptor, ABC):
+class CommandSubscriptor(Subscriptor, ABC):
     topic: str
     sub_name: str
+    schema: object
     client: pulsar.Client
+    max_retries: int = 20
 
     def __init__(self):
         self.client = pulsar.Client(f'pulsar://{utils.broker_host()}:6650')
         self.logInfo(f"📥 Cliente Pulsar creado para tópico: '{self.topic}'")
 
     def subscribe(self):
-        self.logInfo(f"⏱️ Suscribiéndose al tópico '{self.topic}'...")
         for data in self.suscribirse_a_mensajes():
             self.process_message(data)
 
@@ -107,28 +123,12 @@ class EventSubscriptor(Subscriptor, ABC):
             self.logInfo(f"Cerrando cliente Pulsar para tópico '{self.topic}'...")
             self.client.close()
         except Exception as error:
-            self.logError("Error cerrando cliente Pulsar:", error)
+            self.logError("Error cerrando cliente Pulsar", error)
 
     def suscribirse_a_mensajes(self):
         app = create_app("Atribuciones")
-
-        schema = f"public/default/{self.topic}"
-        try:
-            json_schema = utils.consultar_schema_registry(schema)
-            avro_schema = utils.obtener_schema_avro_de_diccionario(json_schema)
-
-            self.logInfo(f"⏱️ Suscribiendo a tópico '{self.topic}'...")
-
-            consumer = self.client.subscribe(
-                topic=self.topic,
-                consumer_type=_pulsar.ConsumerType.Shared,
-                subscription_name=self.sub_name,
-                schema=avro_schema,
-                negative_ack_redelivery_delay_ms=5000,
-            )
-            self.logError(f"Suscrito a tópico: '{self.topic}' con subscripción '{self.sub_name}'")
-        except Exception as error:
-            self.logError(f"Error suscribiéndose al tópico '{self.topic}':", error)
+        consumer = self.obtener_consumidor()
+        self.logError(f"Suscrito a tópico: '{self.topic}' con subscripción '{self.sub_name}'")
 
         self.logInfo(f"Esperando mensajes en tópico '{self.topic}'...")
         while True:
@@ -146,6 +146,25 @@ class EventSubscriptor(Subscriptor, ABC):
                             consumer.negative_acknowledge(message)
             except _pulsar.Timeout:
                 pass
+
+    def obtener_consumidor(self):
+        retries = 0
+        while True:
+            if retries >= self.max_retries:
+                self.logError(f"No se pudo suscribir al tópico '{self.topic}' después de {self.max_retries} intentos.")
+                raise Exception(f"No se pudo suscribir al tópico '{self.topic}' después de {self.max_retries} intentos.")
+            retries += 1
+            try:
+                return self.client.subscribe(
+                    topic=self.topic,
+                    consumer_type=_pulsar.ConsumerType.Shared,
+                    subscription_name=self.sub_name,
+                    schema=AvroSchema(self.schema),
+                    negative_ack_redelivery_delay_ms=5000,
+                )
+            except Exception as error:
+                self.logError(f"Error suscribiéndose al tópico '{self.topic}'. Intento {retries}:", error)
+            time.sleep(5)
 
     def logInfo(self, message: str):
         logging.info("=================================")

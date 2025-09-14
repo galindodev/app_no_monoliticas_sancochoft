@@ -165,6 +165,7 @@ services:
       - POSTGRES_HOST=db_liquidaciones
       - POSTGRES_PORT=5432
       - GUNICORN_CMD_ARGS=--log-level info --reload
+      - BROKER_HOST=broker
     ports:
       - "5001:5000"
     depends_on:
@@ -173,7 +174,8 @@ services:
       - ./liquidaciones:/app/liquidaciones
     networks:
       - sidecar
-    profiles: ["liquidaciones"]
+      - pulsar
+    profiles: ["liquidaciones", "monolito"]
 
   alianzas_bff:
     build:
@@ -232,7 +234,7 @@ services:
     volumes:
       - ./data/postgres/db_atribuciones:/var/lib/postgresql/data
     ports:
-      - "5434:5432"
+      - "5433:5432"
     networks:
       - sidecar
     profiles: ["alpespartners", "atribuciones"]
