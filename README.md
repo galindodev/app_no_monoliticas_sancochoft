@@ -117,3 +117,14 @@ docker compose --profile alianzas_bff up
 ### Colección de Postman
 
 Puede usar la [colección de Postman Alpes Partners](./docs/Alpes%20Partners.postman_collection.json) de ejemplo. Descargue este archivo e impórtelo desde Postman.
+
+### Participacion de los integrantes
+
+- Jhorman Galindo: Participó en la documentación general y en reuniones de coordinación. Desarrolló un microservicio BFF con comunicación basada en comandos. Se encargó de justificar los tipos de eventos y definir esquemas.
+
+- Leiner Barrios: Contribuyó en la documentación y en la construcción colaborativa de los diagramas. Desarrolló un microservicio ATRIBUCIONES implementando CRUD en la capa de datos. Ayudó a configurar la topología de datos.
+
+- Jaime Gallo: Apoyó en la documentación y reuniones de coordinación. Desarrolló un microservicio PAGOS y lo integró al repositorio común. Se enfocó en la propagación de comandos y eventos mediante Apache Pulsar y en el despliegue de los servicios en la plataforma elegida en los demás micros.
+
+- Alejandro Bogotá: Colaboró en la documentación grupal y en la construcción de diagramas. Desarrolló un microservicio LIQUIDACIONES. Participó en la validación de los escenarios de calidad definidos en la entrega pasada. Tiene ya casi listo la configuración de código en la parte CLOUD.
+NOTA: Todos trabajaron en 1 solo repositorio online de forma síncrona, documentando y construyendo los diagramas de los 4 microservicios.
