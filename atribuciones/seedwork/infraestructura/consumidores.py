@@ -79,9 +79,9 @@ class CommandSubscriptor(Subscriptor, ABC):
         logging.info(f"============= {message}")
         logging.info("=================================")
 
-    def logError(self, message: str):
+    def logError(self, message: str, error=None):
         logging.error("=================================")
-        logging.error(message)
+        logging.error(f"{message} {error}")
         logging.error("=================================")
 
 
@@ -152,7 +152,7 @@ class EventSubscriptor(Subscriptor, ABC):
         logging.info(f"============= {message}")
         logging.info("=================================")
 
-    def logError(self, message: str):
+    def logError(self, message: str, error=None):
         logging.error("=================================")
-        logging.error(message)
+        logging.error(f"{message} {error}")
         logging.error("=================================")

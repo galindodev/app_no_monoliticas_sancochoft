@@ -40,7 +40,7 @@ class CommandSubscriptor(Subscriptor, ABC):
             self.logInfo(f"Cerrando cliente Pulsar para tópico '{self.topic}'...")
             self.client.close()
         except Exception as error:
-            self.logError("Error cerrando cliente Pulsar:", error)
+            self.logError("Error cerrando cliente Pulsar", error)
 
     def suscribirse_a_mensajes(self):
         app = configure_app()
@@ -79,9 +79,9 @@ class CommandSubscriptor(Subscriptor, ABC):
         logging.info(f"============= {message}")
         logging.info("=================================")
 
-    def logError(self, message: str):
+    def logError(self, message: str, error=None):
         logging.error("=================================")
-        logging.error(message)
+        logging.error(f"{message} {error}")
         logging.error("=================================")
 
 
@@ -112,13 +112,11 @@ class EventSubscriptor(Subscriptor, ABC):
     def suscribirse_a_mensajes(self):
         app = configure_app()
 
+        self.logInfo(f"⏱️ Suscribiendo a tópico '{self.topic}'...")
         schema = f"public/default/{self.topic}"
+        json_schema = utils.consultar_schema_registry(schema)
+        avro_schema = utils.obtener_schema_avro_de_diccionario(json_schema)
         try:
-            json_schema = utils.consultar_schema_registry(schema)
-            avro_schema = utils.obtener_schema_avro_de_diccionario(json_schema)
-
-            self.logInfo(f"⏱️ Suscribiendo a tópico '{self.topic}'...")
-
             consumer = self.client.subscribe(
                 topic=self.topic,
                 consumer_type=_pulsar.ConsumerType.Shared,
@@ -152,7 +150,7 @@ class EventSubscriptor(Subscriptor, ABC):
         logging.info(f"============= {message}")
         logging.info("=================================")
 
-    def logError(self, message: str):
+    def logError(self, message: str, error=None):
         logging.error("=================================")
-        logging.error(message)
+        logging.error(f"{message} {error}")
         logging.error("=================================")
