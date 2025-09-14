@@ -8,3 +8,9 @@ class AtribucionDTO(DTO):
     evento: str = field(default_factory=str)
     monto: float = field(default_factory=float)
     moneda: str = field(default_factory=str)
+
+
+@dataclass(frozen=True)
+class ProgramaAtribucionDTO(DTO):
+    id_programa: str = field(default_factory=str)
+    atribuciones: list[AtribucionDTO] = field(default_factory=list)

@@ -4,6 +4,8 @@ import logging
 from flask import request, Response
 
 from atribuciones.modulos.atribucion.aplicacion.comandos.agregar_atribucion import AgregarAtribucion
+from atribuciones.modulos.atribucion.aplicacion.queries.obtener_atribuciones import ObtenerAtribuciones
+from atribuciones.seedwork.aplicacion.queries import ejecutar_query
 from atribuciones.seedwork.dominio.excepciones import ExcepcionDominio
 from atribuciones.seedwork.aplicacion.comandos import ejecutar_commando
 
@@ -25,6 +27,14 @@ def agregar_atribucion():
     comando = AgregarAtribucion(**request.json)
     ejecutar_commando(comando)
     return dict(message="Atribución agregada", payload=comando), 200
+
+
+@app.get('/atribuciones/<string:id_programa>')
+def obtener_atribuciones(id_programa):
+    """Endpoint para obtener una atribución por ID de programa."""
+    obtener_atribuciones = ObtenerAtribuciones(id_programa=id_programa)
+    ejecucion_query = ejecutar_query(obtener_atribuciones)
+    return ejecucion_query.resultado.__dict__, 200
 
 
 @app.errorhandler(ExcepcionDominio)
