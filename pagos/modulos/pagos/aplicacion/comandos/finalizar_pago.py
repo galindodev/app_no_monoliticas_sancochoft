@@ -16,6 +16,7 @@ from pagos.modulos.pagos.infraestructura.fabricas import FabricaRepositorio
 @dataclass
 class FinalizarPago(Comando):
     id_pago: str
+    pagado: bool
 
 
 class FinalizarPagoHandler(ComandoHandler):

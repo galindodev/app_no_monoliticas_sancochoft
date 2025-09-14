@@ -15,11 +15,11 @@ class SuscriptorSolicitarPago(CommandSubscriptor):
         ejecutar_commando(solicitar_pago)
 
 
-class SubscriptorLiquidacionFinalizada(EventSubscriptor):
-    topic = "eventos-liquidacion"
-    sub_name = "eventos-pagos-a-liquidaciones"
+class LiquidacionFinalizadaSuscripcion(EventSubscriptor):
+    topic = "eventos-liquidacion-finalizada"
+    sub_name = "eventos-pagos-escucha-liquidacion-finalizada"
 
     def process_message(self, data):
         self.logInfo(f"📥 Evento de liquidación finalizada recibido: {data}")
-        finalizar_pago = FinalizarPago(id_pago=data.id_pago)
+        finalizar_pago = FinalizarPago(id_pago=data.id_pago, pagado=data.pagado)
         ejecutar_commando(finalizar_pago)

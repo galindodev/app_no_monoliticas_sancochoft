@@ -2,7 +2,7 @@
 import logging
 from threading import Thread
 
-from pagos.modulos.pagos.infraestructura.consumidores import SubscriptorLiquidacionFinalizada, SuscriptorSolicitarPago
+from pagos.modulos.pagos.infraestructura.consumidores import LiquidacionFinalizadaSuscripcion, SuscriptorSolicitarPago
 from pagos.modulos.pagos.infraestructura.despachadores import PagoSolicitadoDispatcher
 from pagos.seedwork.infraestructura.consumidores import Subscriptor
 from pagos.seedwork.infraestructura.utils import register_esquemas
@@ -25,4 +25,4 @@ def post_fork(_, __):
     Thread(target=escuchar_mensaje, args=(SuscriptorSolicitarPago(),), daemon=True).start()
 
     # Eventos
-    Thread(target=escuchar_mensaje, args=(SubscriptorLiquidacionFinalizada(),), daemon=True).start()
+    Thread(target=escuchar_mensaje, args=(LiquidacionFinalizadaSuscripcion(),), daemon=True).start()
