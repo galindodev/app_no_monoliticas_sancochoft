@@ -16,4 +16,4 @@ COPY ./alianzas_bff ./alianzas_bff
 
 EXPOSE 5000
 
-CMD ["gunicorn", "-k", "gevent", "--bind", "0.0.0.0:5000", "alianzas_bff.api:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "alianzas_bff.api:app"]

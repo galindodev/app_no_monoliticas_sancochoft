@@ -1,4 +1,3 @@
-import gevent
 from abc import ABC
 import pulsar, _pulsar
 from pulsar.schema import AvroSchema
@@ -74,7 +73,6 @@ class CommandSubscriptor(Subscriptor, ABC):
                             consumer.negative_acknowledge(message)
             except _pulsar.Timeout:
                 pass
-            gevent.sleep(0)
 
     def logInfo(self, message: str):
         logging.info("=================================")
@@ -148,7 +146,6 @@ class EventSubscriptor(Subscriptor, ABC):
                             consumer.negative_acknowledge(message)
             except _pulsar.Timeout:
                 pass
-            gevent.sleep(0)
 
     def logInfo(self, message: str):
         logging.info("=================================")

@@ -18,4 +18,4 @@ COPY ./pagos ./pagos
 
 EXPOSE 5000
 
-CMD ["wait-for", "db_pagos:5432", "--",  "gunicorn", "-k", "gevent", "--bind", "0.0.0.0:5000", "-c", "pagos/gunicorn_config.py", "pagos.api:create_app()"]
+CMD ["wait-for", "db_pagos:5432", "--",  "gunicorn", "--bind", "0.0.0.0:5000", "-c", "pagos/gunicorn_config.py", "pagos.api:create_app()"]
