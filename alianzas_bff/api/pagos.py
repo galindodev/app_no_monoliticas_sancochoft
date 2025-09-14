@@ -13,6 +13,7 @@ def solicitar_pago():
     payload = dict(
         id_influencer=request.json.get('id_influencer'),
         monto=request.json.get('monto'),
+        id_programa=request.json.get('id_programa'),
     )
     comando = dict(
         id=str(uuid.uuid4()),
@@ -25,5 +26,5 @@ def solicitar_pago():
         data=payload,
     )
     despachador = Despachador()
-    despachador.publicar_mensaje(comando, topico="comandos-pagos")
+    despachador.publicar_mensaje(comando, topico="comandos-solicitar-pago")
     return dict(message="Solicitud de pago enviada.", payload=payload), 202

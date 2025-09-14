@@ -37,6 +37,7 @@ def agregar_atribucion():
 @bp.get('/<string:id_programa>')
 def obtener_atribuciones(id_programa):
     """Endpoint para obtener una atribución por ID de programa."""
-    atribuciones_url = f"http://{os.getenv("ATRIBUCIONES_HOST")}/atribuciones/{id_programa}"
+    atribuciones_host = os.getenv("ATRIBUCIONES_HOST")
+    atribuciones_url = f"http://{atribuciones_host}/atribuciones/{id_programa}"
     json = requests.get(atribuciones_url, timeout=15).json()
     return json, 200
