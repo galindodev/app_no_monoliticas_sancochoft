@@ -10,6 +10,10 @@ Los siguientes diagramas son una vista general. Pretender dar una noción de lo 
 
 <img width="768" src="./docs/flujo_trabajo.png" />
 
+| Comandos y eventos por microservicios |
+|-----------------------|
+| <img width="600" src="./docs/eventos_micros.png" />  |
+
 | Módulos |
 |-----------------------|
 | <img width="600" src="./docs/arqui_modulos_micros.png" />  |
