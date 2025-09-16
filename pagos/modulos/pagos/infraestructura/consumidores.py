@@ -25,5 +25,15 @@ class LiquidacionFinalizadaSuscripcion(EventSubscriptor):
 
     def process_message(self, data):
         self.logInfo(f"📥 Evento de liquidación finalizada recibido: {data}")
-        finalizar_pago = FinalizarPago(id_pago=data.id_pago, pagado=data.pagado)
+        finalizar_pago = FinalizarPago(id_pago=data.id_pago, pagado=True)
+        ejecutar_commando(finalizar_pago)
+
+
+class LiquidacionFallidaSuscripcion(EventSubscriptor):
+    topic = "eventos-liquidacion-fallida"
+    sub_name = "eventos-pagos-escucha-liquidacion-fallida"
+
+    def process_message(self, data):
+        self.logInfo(f"📥 Evento de liquidación fallida recibido: {data}")
+        finalizar_pago = FinalizarPago(id_pago=data.id_pago, pagado=False)
         ejecutar_commando(finalizar_pago)
