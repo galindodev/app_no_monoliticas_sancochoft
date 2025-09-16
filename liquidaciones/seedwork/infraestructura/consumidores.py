@@ -5,7 +5,7 @@ import _pulsar
 import logging
 from types import SimpleNamespace
 
-from liquidaciones.api import create_app
+from liquidaciones.api.app import create_app
 from liquidaciones.seedwork.infraestructura import utils
 
 
@@ -30,10 +30,6 @@ class EventSubscriptor(Subscriptor, ABC):
         self.client = pulsar.Client(f'pulsar://{utils.broker_host()}:6650')
         self.logInfo(f"📥 Cliente Pulsar creado para tópico: '{self.topic}'")
 
-    def subscribe(self):
-        for data in self.suscribirse_a_mensajes():
-            self.process_message(data)
-
     def process_message(self, _):
         raise NotImplementedError()
 
@@ -44,11 +40,11 @@ class EventSubscriptor(Subscriptor, ABC):
         except Exception as error:
             self.logError("Error cerrando cliente Pulsar:", error)
 
-    def suscribirse_a_mensajes(self):
+    def subscribe(self):
         app = create_app("Liquidaciones")
 
         consumer = self.obtener_consumidor()
-        self.logError(f"Suscrito a tópico: '{self.topic}' con subscripción '{self.sub_name}'")
+        self.logInfo(f"Suscrito a tópico: '{self.topic}' con subscripción '{self.sub_name}'")
 
         self.logInfo(f"Esperando mensajes en tópico '{self.topic}'...")
         while True:
@@ -60,7 +56,7 @@ class EventSubscriptor(Subscriptor, ABC):
                     self.logInfo(f"Llegó en tópico '{self.topic}': {data}")
                     with app.app_context():
                         try:
-                            yield data
+                            self.process_message(data)
                             consumer.acknowledge(message)
                         except Exception as error:
                             self.logError(f"Error al procesar el mensaje en {self.topic}: {error}")
@@ -97,5 +93,8 @@ class EventSubscriptor(Subscriptor, ABC):
 
     def logError(self, message: str, error=None):
         logging.error("=================================")
-        logging.error(f"{message} {error}")
+        if error:
+            logging.error(f"{message} {error}")
+        else:
+            logging.error(message)
         logging.error("=================================")
