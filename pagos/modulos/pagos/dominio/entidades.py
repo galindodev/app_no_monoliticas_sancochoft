@@ -24,7 +24,11 @@ class Pago(AgregacionRaiz):
         self.monto = pago.monto
         self.estado = pago.estado
 
-        evento = PagoSolicitado(id_pago=self.id, id_influencer=self.id_influencer, monto=self.monto.valor)
+        evento = PagoSolicitado(
+            id_pago=self.id,
+            id_influencer=self.id_influencer,
+            monto=self.monto.valor,
+            id_programa=self.id_programa)
         self.agregar_evento(evento)
 
     def finalizar(self, pagado: bool):

@@ -21,12 +21,12 @@ class SuscriptorAgregarAtribucion(CommandSubscriptor):
         ejecutar_commando(agregar_atribucion)
 
 
-class SuscriptorPagoPagado(EventSubscriptor):
-    topic = "eventos-pago-pagado"
-    sub_name = "eventos-pagos-pagados-a-atribuciones"
+class SuscriptorPagoSolicitado(EventSubscriptor):
+    topic = "eventos-pago-solicitado"
+    sub_name = "eventos-pagos-solicitados-a-atribuciones"
 
     def process_message(self, data):
-        self.logInfo(f"📥 Evento de pago pagado recibido: {data}")
+        self.logInfo(f"📥 Evento de pago solicitado recibido: {data}")
         completar_programa = CompletarPrograma(
             id_programa=data.id_programa,
             id_socio=data.id_influencer

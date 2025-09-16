@@ -5,6 +5,7 @@ from pagos.seedwork.infraestructura.schema.v1.eventos import EventoIntegracion
 class EventoPagoSolicitadoPayload(Record):
     id_pago = String()
     id_influencer = String()
+    id_programa = String()
     monto = Float()
 
 

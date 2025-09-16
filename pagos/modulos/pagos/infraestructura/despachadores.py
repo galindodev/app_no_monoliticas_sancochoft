@@ -21,6 +21,7 @@ class PagoSolicitadoDispatcher(BaseDispatcher):
                 id_pago=str(evento.id_pago),
                 id_influencer=str(evento.id_influencer),
                 monto=evento.monto,
+                id_programa=str(evento.id_programa),
             )
         )
 

@@ -11,6 +11,7 @@ class PagoSolicitado(EventoDominio):
     id_pago: uuid.UUID = None
     id_influencer: uuid.UUID = None
     monto: float = None
+    id_programa: uuid.UUID = None
 
 
 @dataclass
