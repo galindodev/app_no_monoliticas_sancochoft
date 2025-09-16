@@ -18,4 +18,4 @@ COPY ./liquidaciones ./liquidaciones
 
 EXPOSE 5000
 
-CMD ["wait-for", "db_liquidaciones:5432", "--",  "gunicorn", "--bind", "0.0.0.0:5000", "-c", "liquidaciones/gunicorn_config.py", "liquidaciones.api:app"]
+CMD ["wait-for", "db_liquidaciones:5432", "--",  "flask", "--app", "liquidaciones.api:init_app()", "run", "--host", "0.0.0.0"]
