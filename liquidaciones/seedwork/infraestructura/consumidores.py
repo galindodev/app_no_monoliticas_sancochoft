@@ -25,9 +25,10 @@ class EventSubscriptor(Subscriptor, ABC):
     sub_name: str
     client: pulsar.Client
     max_retries: int = 20
+    enable_dlq: bool = False
 
     def __init__(self):
-        self.client = pulsar.Client(f'pulsar://{utils.broker_host()}:6650')
+        self.client = pulsar.Client(f"pulsar://{utils.broker_host()}:6650")
         self.logInfo(f"📥 Cliente Pulsar creado para tópico: '{self.topic}'")
 
     def process_message(self, _):
@@ -44,7 +45,9 @@ class EventSubscriptor(Subscriptor, ABC):
         app = create_app("Liquidaciones")
 
         consumer = self.obtener_consumidor()
-        self.logInfo(f"Suscrito a tópico: '{self.topic}' con subscripción '{self.sub_name}'")
+        self.logInfo(
+            f"Suscrito a tópico: '{self.topic}' con subscripción '{self.sub_name}'"
+        )
 
         self.logInfo(f"Esperando mensajes en tópico '{self.topic}'...")
         while True:
@@ -52,7 +55,7 @@ class EventSubscriptor(Subscriptor, ABC):
                 message = consumer.receive(timeout_millis=1000)
                 if message:
                     value = message.value()
-                    data = SimpleNamespace(**value['data'])
+                    data = SimpleNamespace(**value["data"])
                     self.logInfo(f"Llegó en tópico '{self.topic}': {data}")
                     with app.app_context():
                         try:
@@ -81,10 +84,22 @@ class EventSubscriptor(Subscriptor, ABC):
                     subscription_name=self.sub_name,
                     schema=avro_schema,
                     negative_ack_redelivery_delay_ms=5000,
+                    dead_letter_policy=self.get_dlq_policy(),
                 )
             except Exception as error:
-                self.logError(f"Error suscribiéndose al tópico '{self.topic}'. Intento {retries}:", error)
+                self.logError(
+                    f"Error suscribiéndose al tópico '{self.topic}'. Intento {retries}:",
+                    error,
+                )
             time.sleep(5)
+
+    def get_dlq_policy(self):
+        if not self.enable_dlq:
+            return None
+        return pulsar.ConsumerDeadLetterPolicy(
+            max_redeliver_count=3,
+            dead_letter_topic=f"{self.topic}-DLQ",
+        )
 
     def logInfo(self, message: str):
         logging.info("=================================")

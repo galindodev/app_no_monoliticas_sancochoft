@@ -6,6 +6,7 @@ from liquidaciones.seedwork.infraestructura.consumidores import EventSubscriptor
 class PagoSolicitadoSuscripcion(EventSubscriptor):
     topic = "eventos-pago-solicitado"
     sub_name = "eventos-pagos-a-liquidaciones"
+    enable_dlq = True
 
     def process_message(self, data):
         self.logInfo(f"📥 Evento de pago solicitado recibido: {data}")
