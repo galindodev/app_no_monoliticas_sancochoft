@@ -11,3 +11,8 @@ class LiquidacionFinalizada(EventoDominio):
     id_pago: uuid.UUID = None
     id_liquidacion: uuid.UUID = None
     pagado: bool = None
+
+
+@dataclass
+class LiquidacionFallida(EventoDominio):
+    id_pago: str = None

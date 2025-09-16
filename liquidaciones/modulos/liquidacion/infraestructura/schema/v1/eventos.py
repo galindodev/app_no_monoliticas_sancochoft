@@ -11,3 +11,11 @@ class EventoLiquidacionFinalizadaPayload(Record):
 
 class EventoLiquidacionFinalizada(EventoIntegracion):
     data = EventoLiquidacionFinalizadaPayload()
+
+
+class EventoLiquidacionFallidaPayload(Record):
+    id_pago = String()
+
+
+class EventoLiquidacionFallida(EventoIntegracion):
+    data = EventoLiquidacionFallidaPayload()
