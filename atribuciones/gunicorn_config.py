@@ -6,6 +6,7 @@ from atribuciones.modulos.atribucion.infraestructura.consumidores import (
     SuscriptorPagoRechazado,
     SuscriptorPagoSolicitado,
 )
+from atribuciones.modulos.atribucion.infraestructura.despachadores import ProgramaCompletadoDispatcher, ProgramaReabiertoDispatcher
 from atribuciones.seedwork.infraestructura.consumidores import Subscriptor
 from atribuciones.seedwork.infraestructura.utils import register_esquemas
 
@@ -19,7 +20,10 @@ def escuchar_mensaje(subscriptor: Subscriptor):
 
 
 def post_fork(_, __):
+    # Publicar esquemas
     register_esquemas(SuscriptorAgregarAtribucion())
+    register_esquemas(ProgramaCompletadoDispatcher())
+    register_esquemas(ProgramaReabiertoDispatcher())
 
     # Comandos
     Thread(
