@@ -6,8 +6,10 @@ from atribuciones.seedwork.aplicacion.handlers import Handler
 class HandlerProgramaIntegracion(Handler):
     @staticmethod
     def handle_programa_completado(evento: ProgramaCompletado):
-        ProgramaCompletadoDispatcher.handle(evento)
+        dispatcher = ProgramaCompletadoDispatcher()
+        dispatcher.handle(evento)
 
     @staticmethod
     def handle_programa_reabierto(evento: ProgramaReabierto):
-        ProgramaReabiertoDispatcher.handle(evento)
+        dispatcher = ProgramaReabiertoDispatcher()
+        dispatcher.handle(evento)
