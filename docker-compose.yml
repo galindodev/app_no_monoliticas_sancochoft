@@ -167,7 +167,7 @@ services:
       - BROKER_HOST=broker
       - FLASK_DEBUG=1
       - LOG_LEVEL=INFO
-      - PASARELA_URL=http://pasarela:5000
+      - PASARELA_URL=http://alianzas_bff:5000/pasarela
     ports:
       - "5001:5000"
     depends_on:
@@ -240,19 +240,3 @@ services:
     networks:
       - sidecar
     profiles: ["alpespartners", "atribuciones"]
-
-  pasarela:
-    build:
-      context: .
-      dockerfile: pasarela.Dockerfile
-    container_name: pasarela
-    hostname: pasarela
-    environment:
-      - GUNICORN_CMD_ARGS=--log-level info
-    ports:
-      - "6000:5000"
-    volumes:
-      - ./pasarela:/app/pasarela
-    networks:
-      - sidecar
-    profiles: ["pasarela"]
