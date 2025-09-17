@@ -2,6 +2,7 @@ import logging
 from dataclasses import dataclass
 
 from liquidaciones.modulos.liquidacion.dominio.excepciones import LiquidaRechazadaExcepcion
+from liquidaciones.modulos.liquidacion.dominio.servicios import PasarelaPagosService
 from liquidaciones.seedwork.aplicacion.comandos import Comando
 from liquidaciones.seedwork.aplicacion.comandos import ComandoHandler
 from liquidaciones.seedwork.infraestructura.uow import UnidadTrabajoPuerto
@@ -13,7 +14,7 @@ from liquidaciones.modulos.liquidacion.aplicacion.mapeadores import MapeadorLiqu
 
 from liquidaciones.modulos.liquidacion.dominio.fabricas import FabricaLiquidacion
 from liquidaciones.modulos.liquidacion.dominio.repositorios import RepositorioLiquidacion
-from liquidaciones.modulos.liquidacion.infraestructura.fabricas import FabricaRepositorio
+from liquidaciones.modulos.liquidacion.infraestructura.fabricas import FabricaRepositorio, FabricaServicio
 
 
 @dataclass
@@ -27,6 +28,7 @@ class LiquidarPagoHandler(ComandoHandler):
     def __init__(self):
         self.fabrica_liquidacion = FabricaLiquidacion()
         self.fabrica_repositorio = FabricaRepositorio()
+        self.pasarela: PasarelaPagosService = FabricaServicio().crear_objeto(PasarelaPagosService.__class__)
 
     def handle(self, comando: LiquidarPago):
         logging.info(comando)
@@ -37,7 +39,7 @@ class LiquidarPagoHandler(ComandoHandler):
 
         liquidacion: Liquidacion = self.fabrica_liquidacion.crear_objeto(liquidacion_dto, MapeadorLiquidacion())
 
-        if not self.simular_pago():
+        if not self.pasarela.esta_disponible():
             raise LiquidaRechazadaExcepcion(str(liquidacion.id))
 
         liquidacion.liquidar_pago(liquidacion)
@@ -46,10 +48,6 @@ class LiquidarPagoHandler(ComandoHandler):
         UnidadTrabajoPuerto.registrar_batch(repositorio.agregar, liquidacion)
         UnidadTrabajoPuerto.savepoint()
         UnidadTrabajoPuerto.commit()
-
-    def simular_pago(self):
-        ''' Simula la aprobacion o rechazo del pago. Retorna True si se aprueba, False si se rechaza.'''
-        return True
 
 
 @comando.register(LiquidarPago)

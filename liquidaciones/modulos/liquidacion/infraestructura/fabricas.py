@@ -8,6 +8,7 @@ objetos complejos en la capa de infraestructura del dominio de liquidacion
 from __future__ import annotations
 from dataclasses import dataclass
 
+from liquidaciones.modulos.liquidacion.dominio.servicios import PasarelaPagosService
 from liquidaciones.seedwork.dominio.fabricas import Fabrica
 from liquidaciones.seedwork.dominio.repositorios import Repositorio
 
@@ -22,5 +23,16 @@ class FabricaRepositorio(Fabrica):
     def crear_objeto(self, obj: type) -> Repositorio:
         if obj == RepositorioLiquidacion.__class__:
             return RepositorioLiquidacionesSQLAlchemy()
+        else:
+            raise ExcepcionFabrica()
+
+
+@dataclass
+class FabricaServicio(Fabrica):
+    def crear_objeto(self, obj: type) -> object:
+        from .servicios import PasarelaPagosServiceImpl
+
+        if obj == PasarelaPagosService.__class__:
+            return PasarelaPagosServiceImpl()
         else:
             raise ExcepcionFabrica()
