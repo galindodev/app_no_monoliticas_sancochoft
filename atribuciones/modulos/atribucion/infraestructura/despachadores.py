@@ -1,3 +1,5 @@
+from flask import current_app
+
 from atribuciones.modulos.atribucion.dominio.eventos import ProgramaCompletado, ProgramaReabierto
 from atribuciones.modulos.atribucion.infraestructura.schema.v1.eventos import EventoProgramaCompletado, EventoProgramaCompletadoPayload, EventoProgramaReabierto, EventoProgramaReabiertoPayload
 from atribuciones.seedwork.infraestructura.despachadores import BaseDispatcher
@@ -12,6 +14,7 @@ class ProgramaCompletadoDispatcher(BaseDispatcher):
             data=EventoProgramaCompletadoPayload(
                 id_programa=str(evento.id_programa),
                 id_socio=str(evento.id_socio),
+                id_correlacion=current_app.config['id_correlacion'],
             )
         )
 
@@ -25,5 +28,6 @@ class ProgramaReabiertoDispatcher(BaseDispatcher):
             data=EventoProgramaReabiertoPayload(
                 id_programa=str(evento.id_programa),
                 id_socio=str(evento.id_socio),
+                id_correlacion=current_app.config['id_correlacion'],
             )
         )

@@ -7,6 +7,7 @@ class EventoPagoSolicitadoPayload(Record):
     id_influencer = String()
     id_programa = String()
     monto = Float()
+    id_correlacion = String()
 
 
 class EventoPagoSolicitado(EventoIntegracion):
@@ -17,6 +18,7 @@ class EventoPagoPagadoPayload(Record):
     id_pago = String()
     id_influencer = String()
     id_programa = String()
+    id_correlacion = String()
 
 
 class EventoPagoPagado(EventoIntegracion):
@@ -27,6 +29,7 @@ class EventoPagoRechazadoPayload(Record):
     id_pago = String()
     id_influencer = String()
     id_programa = String()
+    id_correlacion = String()
 
 
 class EventoPagoRechazado(EventoIntegracion):

@@ -1,3 +1,5 @@
+from flask import current_app
+
 from pagos.modulos.pagos.dominio.eventos import PagoPagado, PagoRechazado, PagoSolicitado
 from pagos.modulos.pagos.infraestructura.schema.v1.eventos import (
     EventoPagoPagado,
@@ -22,6 +24,7 @@ class PagoSolicitadoDispatcher(BaseDispatcher):
                 id_influencer=str(evento.id_influencer),
                 monto=evento.monto,
                 id_programa=str(evento.id_programa),
+                id_correlacion=current_app.config['id_correlacion'],
             )
         )
 
@@ -36,6 +39,7 @@ class PagoPagadoDispatcher(BaseDispatcher):
                 id_pago=str(evento.id_pago),
                 id_influencer=str(evento.id_influencer),
                 id_programa=str(evento.id_programa),
+                id_correlacion=current_app.config['id_correlacion'],
             )
         )
 
@@ -50,5 +54,6 @@ class PagoRechazadoDispatcher(BaseDispatcher):
                 id_pago=str(evento.id_pago),
                 id_influencer=str(evento.id_influencer),
                 id_programa=str(evento.id_programa),
+                id_correlacion=current_app.config['id_correlacion'],
             )
         )

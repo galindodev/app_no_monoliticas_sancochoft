@@ -7,6 +7,7 @@ class EventoLiquidacionFinalizadaPayload(Record):
     id_pago = String()
     id_liquidacion = String()
     pagado = Boolean()
+    id_correlacion = String()
 
 
 class EventoLiquidacionFinalizada(EventoIntegracion):
@@ -15,6 +16,8 @@ class EventoLiquidacionFinalizada(EventoIntegracion):
 
 class EventoLiquidacionFallidaPayload(Record):
     id_pago = String()
+    id_liquidacion = String()
+    id_correlacion = String()
 
 
 class EventoLiquidacionFallida(EventoIntegracion):

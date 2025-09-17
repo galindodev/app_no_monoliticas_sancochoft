@@ -7,6 +7,7 @@ class ComandoAgregarAtribucionPayload(ComandoIntegracion):
     evento = String()
     monto = Float()
     moneda = String()
+    id_correlacion = String()
 
 
 class ComandoAgregarAtribucion(ComandoIntegracion):

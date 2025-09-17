@@ -6,6 +6,7 @@ class ComandoSolicitarPagoPayload(ComandoIntegracion):
     id_influencer = String()
     monto = Float()
     id_programa = String()
+    id_correlacion = String()
 
 
 class ComandoSolicitarPago(ComandoIntegracion):

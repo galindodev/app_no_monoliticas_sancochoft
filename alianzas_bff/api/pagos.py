@@ -14,6 +14,7 @@ def solicitar_pago():
         id_influencer=request.json.get('id_influencer'),
         monto=request.json.get('monto'),
         id_programa=request.json.get('id_programa'),
+        id_correlacion=str(uuid.uuid4()),
     )
     comando = dict(
         id=str(uuid.uuid4()),

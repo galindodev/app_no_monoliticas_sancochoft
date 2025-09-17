@@ -6,6 +6,7 @@ from atribuciones.seedwork.infraestructura.schema.v1.eventos import EventoIntegr
 class EventoProgramaCompletadoPayload(Record):
     id_programa = String()
     id_socio = String()
+    id_correlacion = String()
 
 
 class EventoProgramaCompletado(EventoIntegracion):
@@ -15,6 +16,7 @@ class EventoProgramaCompletado(EventoIntegracion):
 class EventoProgramaReabiertoPayload(Record):
     id_programa = String()
     id_socio = String()
+    id_correlacion = String()
 
 
 class EventoProgramaReabierto(EventoIntegracion):

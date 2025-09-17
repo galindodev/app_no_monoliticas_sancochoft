@@ -1,3 +1,5 @@
+from flask import current_app
+
 from atribuciones.modulos.atribucion.aplicacion.comandos.agregar_atribucion import AgregarAtribucion
 from atribuciones.modulos.atribucion.aplicacion.comandos.completar_programa import CompletarPrograma
 from atribuciones.modulos.atribucion.aplicacion.comandos.reabrir_programa import ReabrirPrograma
@@ -13,6 +15,7 @@ class SuscriptorAgregarAtribucion(CommandSubscriptor):
     schema = ComandoAgregarAtribucion
 
     def process_message(self, data):
+        current_app.config['id_correlacion'] = str(data.id_correlacion)
         agregar_atribucion = AgregarAtribucion(
             id_programa=data.id_programa,
             evento=data.evento,
@@ -27,6 +30,7 @@ class SuscriptorPagoSolicitado(EventSubscriptor):
 
     def process_message(self, data):
         self.logInfo(f"📥 Evento de pago solicitado recibido: {data}")
+        current_app.config['id_correlacion'] = str(data.id_correlacion)
         completar_programa = CompletarPrograma(
             id_programa=data.id_programa,
             id_socio=data.id_influencer
@@ -40,6 +44,7 @@ class SuscriptorPagoRechazado(EventSubscriptor):
 
     def process_message(self, data):
         self.logInfo(f"📥 Evento de pago rechazado recibido: {data}")
+        current_app.config['id_correlacion'] = str(data.id_correlacion)
         reabrir_programa = ReabrirPrograma(
             id_programa=data.id_programa
         )

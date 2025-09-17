@@ -1,3 +1,5 @@
+from flask import current_app
+
 from liquidaciones.modulos.liquidacion.aplicacion.comandos.liquidar_pago import LiquidarPago
 from liquidaciones.modulos.liquidacion.dominio.eventos import LiquidacionFallida
 from liquidaciones.modulos.liquidacion.infraestructura.despachadores import LiquidacionFallidaDispatcher
@@ -12,6 +14,7 @@ class PagoSolicitadoSuscripcion(EventSubscriptor):
 
     def process_message(self, data):
         self.logInfo(f"📥 Evento de pago solicitado recibido: {data}")
+        current_app.config['id_correlacion'] = str(data.id_correlacion)
         liquidar_pago = LiquidarPago(
             id_pago=data.id_pago,
             id_influencer=data.id_influencer,
@@ -25,6 +28,7 @@ class SuscriptorIntentosMaximosLiquidacion(EventSubscriptor):
     sub_name = "eventos-pagos-a-liquidaciones-DLQ"
 
     def process_message(self, data):
+        current_app.config['id_correlacion'] = str(data.id_correlacion)
         self.logInfo(f"💀💀💀 Evento en DLQ recibido: {data}")
         dispatcher = LiquidacionFallidaDispatcher()
         dispatcher.handle(LiquidacionFallida(id_pago=data.id_pago))
