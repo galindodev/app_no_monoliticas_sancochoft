@@ -14,6 +14,17 @@ Los siguientes diagramas son una vista general. Pretender dar una noción de lo 
 |-----------------------|
 | <img width="600" src="./docs/eventos_micros.png" />  |
 
+
+| Saga Log - Exitoso       | Saga Log - Fallido    |
+|--------------------------|-----------------------|
+| 1. SolicitarPago         | 1. SolicitarPago      |
+| 2. PagoSolicitado        | 2. PagoSolicitado     |
+| 3. ProgramaCompletado    | 3. ProgramaCompletado |
+| 4. LiquidacionFinalizada | 4. LiquidacionFallida |
+| 5. PagoPagado            | 5. PagoRechazado      |
+|                          | 6. ProgramaReabierto  |
+
+
 | Módulos |
 |-----------------------|
 | <img width="600" src="./docs/arqui_modulos_micros.png" />  |
