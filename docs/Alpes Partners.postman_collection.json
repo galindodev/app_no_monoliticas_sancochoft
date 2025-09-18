@@ -2,6 +2,7 @@
 	"info": {
 		"_postman_id": "f569f0f7-24bb-413b-8b87-1e4dff07ff09",
 		"name": "Alpes Partners",
+		"description": "API para el curso de No monolíticas, grupo Sancochof.\n\nEnfóquese en la carpeta **Alianzas BFF.**",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "14550156"
 	},
@@ -10,7 +11,7 @@
 			"name": "Pagos",
 			"item": [
 				{
-					"name": "Obtener pagos pendientes",
+					"name": "QUERY - Obtener pagos pendientes",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -19,7 +20,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id_influencer\": \"{{$randomUUID}}\",\n    \"monto\": 1000\n}",
+							"raw": "{\n    \"id_influencer\": \"{{idInfluencer}}\",\n    \"monto\": 1000\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -27,25 +28,22 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/pagos/obtener-pagos-pendientes",
+							"raw": "http://{{pagosUrl}}/pagos/obtener-pagos-pendientes",
 							"protocol": "http",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{pagosUrl}}"
 							],
-							"port": "5000",
 							"path": [
 								"pagos",
 								"obtener-pagos-pendientes"
 							]
-						}
+						},
+						"description": "Se consideran como pagos pendientes aquellos cuyo estado es \"CREADO\". No se incluyen los pagos rechazados ni pagados."
 					},
 					"response": []
 				},
 				{
-					"name": "Solicitar pago",
+					"name": "DEBUG - Solicitar pago",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -59,15 +57,11 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/pagos/solicitar-pago-comando",
+							"raw": "http://{{pagosUrl}}/pagos/solicitar-pago-comando",
 							"protocol": "http",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{pagosUrl}}"
 							],
-							"port": "5000",
 							"path": [
 								"pagos",
 								"solicitar-pago-comando"
@@ -91,15 +85,57 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "/health",
+									"path": [
+										"health"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "gunicorn"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 18 Sep 2025 00:06:30 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "34"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"app\": \"pagos.api\",\n    \"status\": \"up\"\n}"
+						}
+					]
 				}
-			]
+			],
+			"description": "Endpoints para el microservicio de pagos. Estos endpoints son de pruebas y no deben usarse directamente."
 		},
 		{
 			"name": "Liquidaciones",
 			"item": [
 				{
-					"name": "Liquidar pago",
+					"name": "DEBUG - Liquidar pago",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -139,9 +175,51 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "/health",
+									"path": [
+										"health"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "Werkzeug/3.1.3 Python/3.12.11"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 18 Sep 2025 00:07:30 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "47"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"app\": \"Liquidaciones\",\n    \"status\": \"up\"\n}"
+						}
+					]
 				}
-			]
+			],
+			"description": "Endpoints para el microservicio de liquidaciones. Estos endpoints son de pruebas y no deben usarse directamente."
 		},
 		{
 			"name": "Alianzas BFF",
@@ -161,16 +239,75 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "/health",
+									"path": [
+										"health"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "gunicorn"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 18 Sep 2025 00:07:45 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "37"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"app\": \"Alianzas BFF\",\n    \"status\": \"up\"\n}"
+						}
+					]
 				},
 				{
-					"name": "Solicitar pago",
+					"name": "PASO 1 - Agregar programa",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"let data = pm.response.json();",
+									"",
+									"pm.collectionVariables.set(\"idProgramaAtribucion\", data.response.result.id_programa);",
+									"",
+									"pm.collectionVariables.set(\"idInfluencer\", data.response.payload.id_socio);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id_influencer\": \"{{idInfluencer}}\",\n    \"monto\": {{$randomPrice}},\n    \"id_programa\": \"{{idProgramaAtribucion}}\"\n}",
+							"raw": "{\n    \"id_socio\": \"{{$randomUUID}}\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -178,19 +315,69 @@
 							}
 						},
 						"url": {
-							"raw": "{{alianzasBffUrl}}/pagos",
+							"raw": "{{alianzasBffUrl}}/programas",
 							"host": [
 								"{{alianzasBffUrl}}"
 							],
 							"path": [
-								"pagos"
+								"programas"
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Programa Agregado",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id_socio\": \"44f2c67c-0df6-4f12-99fa-247f122a41ef\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "/programas",
+									"path": [
+										"programas"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "gunicorn"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 18 Sep 2025 00:07:51 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "233"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"payload\": {\n        \"id_socio\": \"865c3ded-d352-4b97-89da-98eb47d3b45b\"\n    },\n    \"response\": {\n        \"message\": \"Programa agregado\",\n        \"payload\": {\n            \"id_socio\": \"865c3ded-d352-4b97-89da-98eb47d3b45b\"\n        },\n        \"result\": {\n            \"id_programa\": \"2536bc49-9796-429f-a87b-73cabda9008f\"\n        }\n    }\n}"
+						}
+					]
 				},
 				{
-					"name": "Agregar atribución",
+					"name": "PASO 2 - Agregar atribución",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -213,10 +400,252 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Atribución agregada",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id_programa\": \"\",\n    \"evento\": \"CLIC\",\n    \"monto\": 442.44,\n    \"moneda\": \"USD\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "/atribuciones",
+									"path": [
+										"atribuciones"
+									]
+								}
+							},
+							"status": "ACCEPTED",
+							"code": 202,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "gunicorn"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 18 Sep 2025 00:08:26 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "163"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Solicitud de atribución enviada.\",\n    \"payload\": {\n        \"evento\": \"CLIC\",\n        \"id_programa\": \"2536bc49-9796-429f-a87b-73cabda9008f\",\n        \"moneda\": \"USD\",\n        \"monto\": 123.43\n    }\n}"
+						}
+					]
 				},
 				{
-					"name": "Obtener atribuciones",
+					"name": "PASO 3 - Solicitar pago",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let data = pm.response.json();",
+									"",
+									"pm.collectionVariables.set(\"idCorrelacion\", data.payload.id_correlacion);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id_influencer\": \"{{idInfluencer}}\",\n    \"monto\": {{$randomPrice}},\n    \"id_programa\": \"{{idProgramaAtribucion}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{alianzasBffUrl}}/pagos",
+							"host": [
+								"{{alianzasBffUrl}}"
+							],
+							"path": [
+								"pagos"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Solicitud recibida",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id_influencer\": \"\",\n    \"monto\": 248.87,\n    \"id_programa\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "/pagos",
+									"path": [
+										"pagos"
+									]
+								}
+							},
+							"status": "ACCEPTED",
+							"code": 202,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "gunicorn"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 18 Sep 2025 00:31:30 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "232"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Solicitud de pago enviada.\",\n    \"payload\": {\n        \"id_correlacion\": \"594ca604-0e66-491c-b9c4-f0a8d18dcd9d\",\n        \"id_influencer\": \"332058f6-9745-47f7-ae52-4f369ab61681\",\n        \"id_programa\": \"4972718c-3141-42f7-9659-74c5361ca445\",\n        \"monto\": 281.81\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "SAGA - Ver transacción",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{pagosUrl}}/sagas/{{idCorrelacion}}",
+							"host": [
+								"{{pagosUrl}}"
+							],
+							"path": [
+								"sagas",
+								"{{idCorrelacion}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Transacción exitosa",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "/sagas/",
+									"path": [
+										"sagas",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "gunicorn"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 18 Sep 2025 00:32:11 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "577"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id_correlacion\": \"594ca604-0e66-491c-b9c4-f0a8d18dcd9d\",\n        \"nombre\": \"SolicitarPago\",\n        \"tipo_mensaje\": \"COMANDO\"\n    },\n    {\n        \"id_correlacion\": \"594ca604-0e66-491c-b9c4-f0a8d18dcd9d\",\n        \"nombre\": \"ProgramaCompletado\",\n        \"tipo_mensaje\": \"EVENTO\"\n    },\n    {\n        \"id_correlacion\": \"594ca604-0e66-491c-b9c4-f0a8d18dcd9d\",\n        \"nombre\": \"LiquidacionFinalizada\",\n        \"tipo_mensaje\": \"EVENTO\"\n    },\n    {\n        \"id_correlacion\": \"594ca604-0e66-491c-b9c4-f0a8d18dcd9d\",\n        \"nombre\": \"PagoPagado\",\n        \"tipo_mensaje\": \"EVENTO\"\n    },\n    {\n        \"id_correlacion\": \"594ca604-0e66-491c-b9c4-f0a8d18dcd9d\",\n        \"nombre\": \"PagoSolicitado\",\n        \"tipo_mensaje\": \"EVENTO\"\n    }\n]"
+						},
+						{
+							"name": "Transacción fallida",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "/sagas/",
+									"path": [
+										"sagas",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "gunicorn"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 18 Sep 2025 00:33:40 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "694"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id_correlacion\": \"f4dd76bf-31a8-4264-b67f-c345a9758b44\",\n        \"nombre\": \"SolicitarPago\",\n        \"tipo_mensaje\": \"COMANDO\"\n    },\n    {\n        \"id_correlacion\": \"f4dd76bf-31a8-4264-b67f-c345a9758b44\",\n        \"nombre\": \"PagoSolicitado\",\n        \"tipo_mensaje\": \"EVENTO\"\n    },\n    {\n        \"id_correlacion\": \"f4dd76bf-31a8-4264-b67f-c345a9758b44\",\n        \"nombre\": \"ProgramaCompletado\",\n        \"tipo_mensaje\": \"EVENTO\"\n    },\n    {\n        \"id_correlacion\": \"f4dd76bf-31a8-4264-b67f-c345a9758b44\",\n        \"nombre\": \"LiquidacionFallida\",\n        \"tipo_mensaje\": \"EVENTO\"\n    },\n    {\n        \"id_correlacion\": \"f4dd76bf-31a8-4264-b67f-c345a9758b44\",\n        \"nombre\": \"PagoRechazado\",\n        \"tipo_mensaje\": \"EVENTO\"\n    },\n    {\n        \"id_correlacion\": \"f4dd76bf-31a8-4264-b67f-c345a9758b44\",\n        \"nombre\": \"ProgramaReabierto\",\n        \"tipo_mensaje\": \"EVENTO\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "QUERY - Obtener atribuciones",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -231,20 +660,325 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Sin atribuciones",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "/atribuciones/",
+									"path": [
+										"atribuciones",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "gunicorn"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 18 Sep 2025 00:08:17 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "70"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"atribuciones\": [],\n    \"id_socio\": \"865c3ded-d352-4b97-89da-98eb47d3b45b\"\n}"
+						},
+						{
+							"name": "No encontrado",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{alianzasBffUrl}}/atribuciones/{{idProgramaAtribucion}}",
+									"host": [
+										"{{alianzasBffUrl}}"
+									],
+									"path": [
+										"atribuciones",
+										"{{idProgramaAtribucion}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "gunicorn"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 18 Sep 2025 00:29:10 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "43"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"El programa no fue encontrado.\"\n}"
+						},
+						{
+							"name": "Con atribuciones",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{alianzasBffUrl}}/atribuciones/{{idProgramaAtribucion}}",
+									"host": [
+										"{{alianzasBffUrl}}"
+									],
+									"path": [
+										"atribuciones",
+										"{{idProgramaAtribucion}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "gunicorn"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 18 Sep 2025 00:29:47 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "150"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"atribuciones\": [\n        {\n            \"estado\": \"PENDIENTE\",\n            \"evento\": \"CLIC\",\n            \"moneda\": \"USD\",\n            \"monto\": 134.27000427246094\n        }\n    ],\n    \"id_socio\": \"332058f6-9745-47f7-ae52-4f369ab61681\"\n}"
+						}
+					]
+				},
+				{
+					"name": "PASARELA - Estado pagos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{pasarelaUrl}}/estado-pagos",
+							"host": [
+								"{{pasarelaUrl}}"
+							],
+							"path": [
+								"estado-pagos"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Respuesta exitosa",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "/estado-pagos",
+									"path": [
+										"estado-pagos"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "gunicorn"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 18 Sep 2025 00:30:10 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "26"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"pagos_permitidos\": true\n}"
+						}
+					]
+				},
+				{
+					"name": "PASARELA - Bloquear pagos",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{pasarelaUrl}}/bloquear-pagos",
+							"host": [
+								"{{pasarelaUrl}}"
+							],
+							"path": [
+								"bloquear-pagos"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Pagos bloqueados",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "/bloquear-pagos",
+									"path": [
+										"bloquear-pagos"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "gunicorn"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 18 Sep 2025 00:30:30 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "31"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Pagos bloqueados\"\n}"
+						}
+					]
+				},
+				{
+					"name": "PASARELA - Permitir pagos",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{pasarelaUrl}}/permitir-pagos",
+							"host": [
+								"{{pasarelaUrl}}"
+							],
+							"path": [
+								"permitir-pagos"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Pagos permitidos",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "/permitir-pagos",
+									"path": [
+										"permitir-pagos"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "gunicorn"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 18 Sep 2025 00:30:40 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "31"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Pagos permitidos\"\n}"
+						}
+					]
 				}
-			]
+			],
+			"description": "Endpoints para el microservicio de Gestión de Alianzas. Use estos endpoints para probar la aplicación.\n\nAllí encontrará 3 endpoints principales con prefijo \"PASO # - ...\". Use estos endpoints en el orden especificado para solicitar un pago con información.\n\nPuede consultar el estado de la transacción con el endpoint \"SAGA - Ver transacción\"\n\nTambién puede controlar la pasarela de pago simulada para que permita o bloquee pagos. Esta es útil para probar los eventos de compensación en el flujo de trabajo."
 		},
 		{
 			"name": "Pulsar",
 			"item": [
 				{
-					"name": "Get Schema",
+					"name": "Ver esquema de un tópico",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{pulsarAdminUrl}}/admin/v2/schemas/public/default/eventos-pago-pagado/schema",
+							"raw": "{{pulsarAdminUrl}}/admin/v2/schemas/{{pulsarTenant}}/{{pulsarNamespace}}/:topic/schema",
 							"host": [
 								"{{pulsarAdminUrl}}"
 							],
@@ -252,16 +986,108 @@
 								"admin",
 								"v2",
 								"schemas",
-								"public",
-								"default",
-								"eventos-pago-pagado",
+								"{{pulsarTenant}}",
+								"{{pulsarNamespace}}",
+								":topic",
 								"schema"
+							],
+							"variable": [
+								{
+									"key": "topic",
+									"value": "comandos-solicitar-pago"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ver suscripciones",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{pulsarAdminUrl}}/admin/v2/persistent/{{pulsarTenant}}/{{pulsarNamespace}}/:topic/subscriptions",
+							"host": [
+								"{{pulsarAdminUrl}}"
+							],
+							"path": [
+								"admin",
+								"v2",
+								"persistent",
+								"{{pulsarTenant}}",
+								"{{pulsarNamespace}}",
+								":topic",
+								"subscriptions"
+							],
+							"variable": [
+								{
+									"key": "topic",
+									"value": "comandos-solicitar-pago"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar tópicos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{pulsarAdminUrl}}/admin/v2/persistent/{{pulsarTenant}}/{{pulsarNamespace}}",
+							"host": [
+								"{{pulsarAdminUrl}}"
+							],
+							"path": [
+								"admin",
+								"v2",
+								"persistent",
+								"{{pulsarTenant}}",
+								"{{pulsarNamespace}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Limpiar mensajes de tópico",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{pulsarAdminUrl}}/admin/v2/persistent/{{pulsarTenant}}/{{pulsarNamespace}}}/:topic/subscription/:subName/skip_all",
+							"host": [
+								"{{pulsarAdminUrl}}"
+							],
+							"path": [
+								"admin",
+								"v2",
+								"persistent",
+								"{{pulsarTenant}}",
+								"{{pulsarNamespace}}}",
+								":topic",
+								"subscription",
+								":subName",
+								"skip_all"
+							],
+							"variable": [
+								{
+									"key": "topic",
+									"value": ""
+								},
+								{
+									"key": "subName",
+									"value": ""
+								}
 							]
 						}
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "Endpoints para probar Pulsar."
 		},
 		{
 			"name": "Atribuciones",
@@ -281,7 +1107,51 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{atribucionesUrl}}/health",
+									"host": [
+										"{{atribucionesUrl}}"
+									],
+									"path": [
+										"health"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "gunicorn"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 18 Sep 2025 00:30:50 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "37"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"app\": \"Atribuciones\",\n    \"status\": \"up\"\n}"
+						}
+					]
 				},
 				{
 					"name": "Agregar atribución",
@@ -308,8 +1178,35 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Agregar programa",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id_socio\": \"{{$randomUUID}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{atribucionesUrl}}/programas",
+							"host": [
+								"{{atribucionesUrl}}"
+							],
+							"path": [
+								"programas"
+							]
+						}
+					},
+					"response": []
 				}
-			]
+			],
+			"description": "Endpoints para el microservicio de atribuciones. Estos endpoints son de pruebas y no deben usarse directamente."
 		}
 	],
 	"event": [
@@ -361,6 +1258,14 @@
 		},
 		{
 			"key": "idInfluencer",
+			"value": ""
+		},
+		{
+			"key": "pasarelaUrl",
+			"value": ""
+		},
+		{
+			"key": "idCorrelacion",
 			"value": ""
 		}
 	]
