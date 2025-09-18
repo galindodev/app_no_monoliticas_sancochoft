@@ -11,15 +11,18 @@ def importar_modelos_alchemy():
 def create_app(name: str):
     app = Flask(name)
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = (
-        "postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}".format(
-            user=os.getenv("POSTGRES_USER"),
-            password=os.getenv("POSTGRES_PASSWORD"),
-            host=os.getenv("POSTGRES_HOST"),
-            port=os.getenv("POSTGRES_PORT"),
-            db=os.getenv("POSTGRES_DB"),
+    if os.getenv("RDS_URL"):
+        app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("RDS_URL")
+    else:
+        app.config["SQLALCHEMY_DATABASE_URI"] = (
+            "postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}".format(
+                user=os.getenv("POSTGRES_USER"),
+                password=os.getenv("POSTGRES_PASSWORD"),
+                host=os.getenv("POSTGRES_HOST"),
+                port=os.getenv("POSTGRES_PORT"),
+                db=os.getenv("POSTGRES_DB"),
+            )
         )
-    )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     app.secret_key = os.getenv("SECRET_KEY", str(uuid.uuid4()))
