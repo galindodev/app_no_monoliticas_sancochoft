@@ -19,7 +19,7 @@ app.register_blueprint(pasarela.bp)
 
 @app.route("/health")
 def health():
-    return {"status": "up", "app": app.name}
+    return {"status": "up!", "app": app.name}
 
 
 if __name__ != "__main__":
