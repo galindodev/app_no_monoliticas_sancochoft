@@ -63,16 +63,13 @@ A continuación, se describen los escenarios de calidad seleccionados, junto con
 ## Estructura del proyecto
 
 ```sh
-├── alianzas_bff
-├── atribuciones
-├── liquidaciones
-└── pagos
+├── .github/workflows # Workflows de GitHub para CI/CD
+├── alianzas_bff      # Backend for Frontend de Alianzas. Es el punto de entrada de la aplicación.
+├── atribuciones      # Microservicio de atribuciones. Encargado de administrar las atribuciones de influencers.
+├── aws               # Task defintions de AWS Fargate
+├── liquidaciones     # Microservicio de liquidaciones. Simula la comunicación con servicios externos para pagos.
+└── pagos             # Microservicio de pagos. Encargada de gestionar los pagos de las atribuciones.
 ```
-
-- `alianzas_bff`: Backend for Frontend de Alianzas. Es el punto de entrada de la aplicación.
-- `atribuciones`: Microservicio de atribuciones. Encargado de administrar las atribuciones de influencers.
-- `liquidaciones`: Microservicio de liquidaciones. Simula la comunicación con servicios externos para pagos.
-- `pagos`: Microservicio de pagos. Encargada de gestionar los pagos de las atribuciones.
 
 ## AlpesPartners
 
