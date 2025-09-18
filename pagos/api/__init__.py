@@ -20,13 +20,18 @@ def configure_app(configuracion={}):
     # Init la aplicacion de Flask
     app = Flask(__name__, instance_relative_config=True)
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}'.format(
-        user=os.getenv('POSTGRES_USER'),
-        password=os.getenv('POSTGRES_PASSWORD'),
-        host=os.getenv('POSTGRES_HOST'),
-        port=os.getenv('POSTGRES_PORT'),
-        db=os.getenv('POSTGRES_DB')
-    )
+    if os.getenv("RDS_URL"):
+        app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("RDS_URL")
+    else:
+        app.config["SQLALCHEMY_DATABASE_URI"] = (
+            "postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}".format(
+                user=os.getenv("POSTGRES_USER"),
+                password=os.getenv("POSTGRES_PASSWORD"),
+                host=os.getenv("POSTGRES_HOST"),
+                port=os.getenv("POSTGRES_PORT"),
+                db=os.getenv("POSTGRES_DB"),
+            )
+        )
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     app.secret_key = '9d58f98f-3ae8-4149-a09f-3a8c2012e32c'
