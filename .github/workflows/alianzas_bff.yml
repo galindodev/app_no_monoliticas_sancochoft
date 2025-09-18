@@ -7,9 +7,10 @@ on:
     paths:
       - 'alianzas_bff/**'
       - 'alianzas_bff.Dockerfile'
+      - 'requirements.txt'
       - '.github/workflows/alianzas_bff.yml'
   pull_request:
-    branches: ["main", "feature/*"]
+    branches: ["main"]
 
 env:
   AWS_REGION: us-east-1
