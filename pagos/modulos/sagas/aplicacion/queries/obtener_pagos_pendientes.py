@@ -1,4 +1,3 @@
-import logging
 from dataclasses import dataclass
 
 from pagos.seedwork.aplicacion.queries import ejecutar_query as query
@@ -26,7 +25,6 @@ class ObtenerTransaccionesPagoHandler(QueryHandler):
             )
             for t in transacciones
         ]
-        logging.info(resultado)
         return QueryResultado(resultado=resultado)
 
 
