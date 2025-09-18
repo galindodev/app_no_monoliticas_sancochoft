@@ -1,0 +1,31 @@
+name: Build & Push to ECR
+
+on:
+  push:
+    branches: ["main", "feature/*"]
+    tags: ["v*"]
+    paths:
+      - 'alianzas_bff/**'
+      - 'alianzas_bff.Dockerfile'
+      - '.github/workflows/alianzas_bff.yml'
+  pull_request:
+    branches: ["main", "feature/*"]
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: ddd-1
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Hello World
+        run: echo "Building and Pushing Docker image to ECR"
