@@ -22,8 +22,8 @@ class RepositorioProgramaAtribucionSQLAlchemy(RepositorioProgramaAtribucion):
         self.fabrica_programa = FabricaProgramaAtribucion()
 
     def obtener_por_id(self, id: UUID) -> ProgramaAtribucion:
-        result = db.session.query(ProgramaAtribucionesDTO).filter_by(id=str(id)).one()
-        return self.fabrica_programa.crear_objeto(result, MapeadorProgramaAtribucion())
+        result = db.session.query(ProgramaAtribucionesDTO).filter_by(id=str(id)).one_or_none()
+        return self.fabrica_programa.crear_objeto(result, MapeadorProgramaAtribucion()) if result else None
 
     def obtener_todos(self) -> list[ProgramaAtribucion]:
         results = db.session.query(ProgramaAtribucionesDTO).all()

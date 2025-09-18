@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from uuid import UUID
 
+from atribuciones.modulos.atribucion.dominio.excepciones import ProgramaNoEncontradoExcepcion
 from atribuciones.seedwork.aplicacion.queries import Query, QueryHandler, QueryResultado, ejecutar_query as query
 
 from atribuciones.modulos.atribucion.dominio.entidades import ProgramaAtribucion
@@ -24,6 +25,8 @@ class ObtenerAtribucionesHandler(QueryHandler):
 
     def handle(self, consulta: ObtenerAtribuciones):
         programa: ProgramaAtribucion = self.repositorio.obtener_por_id(UUID(consulta.id_programa))
+        if not programa:
+            raise ProgramaNoEncontradoExcepcion()
         programa_dto = self.fabrica_atribucion.crear_objeto(programa, MapeadorProgramaAtribucion())
         return QueryResultado(resultado=programa_dto)
 
