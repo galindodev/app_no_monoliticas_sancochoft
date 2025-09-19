@@ -6,6 +6,7 @@ RUN apk add --no-cache \
     build-base \
     libffi-dev \
     openssl-dev \
+    curl \
     python3-dev \
     py3-pip && \
     wget -qO- https://raw.githubusercontent.com/eficode/wait-for/v2.2.3/wait-for > /usr/local/bin/wait-for && \
