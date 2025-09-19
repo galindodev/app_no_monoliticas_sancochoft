@@ -28,8 +28,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://{{pagosUrl}}/pagos/obtener-pagos-pendientes",
-							"protocol": "http",
+							"raw": "{{pagosUrl}}/pagos/obtener-pagos-pendientes",
 							"host": [
 								"{{pagosUrl}}"
 							],
@@ -57,8 +56,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://{{pagosUrl}}/pagos/solicitar-pago-comando",
-							"protocol": "http",
+							"raw": "{{pagosUrl}}/pagos/solicitar-pago-comando",
 							"host": [
 								"{{pagosUrl}}"
 							],
@@ -293,8 +291,12 @@
 									"let data = pm.response.json();",
 									"",
 									"pm.collectionVariables.set(\"idProgramaAtribucion\", data.response.result.id_programa);",
+									"pm.variables.set(\"idProgramaAtribucion\", data.response.result.id_programa);",
+									"pm.environment.set(\"idProgramaAtribucion\", data.response.result.id_programa);",
 									"",
 									"pm.collectionVariables.set(\"idInfluencer\", data.response.payload.id_socio);",
+									"pm.variables.set(\"idInfluencer\", data.response.payload.id_socio);",
+									"pm.environment.set(\"idInfluencer\", data.response.payload.id_socio);",
 									""
 								],
 								"type": "text/javascript",
@@ -462,6 +464,8 @@
 									"let data = pm.response.json();",
 									"",
 									"pm.collectionVariables.set(\"idCorrelacion\", data.payload.id_correlacion);",
+									"pm.variables.set(\"idCorrelacion\", data.payload.id_correlacion);",
+									"pm.environment.set(\"idCorrelacion\", data.payload.id_correlacion);",
 									""
 								],
 								"type": "text/javascript",
@@ -798,11 +802,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{pasarelaUrl}}/estado-pagos",
+							"raw": "{{alianzasBffUrl}}/pasarela/estado-pagos",
 							"host": [
-								"{{pasarelaUrl}}"
+								"{{alianzasBffUrl}}"
 							],
 							"path": [
+								"pasarela",
 								"estado-pagos"
 							]
 						}
@@ -856,11 +861,12 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{pasarelaUrl}}/bloquear-pagos",
+							"raw": "{{alianzasBffUrl}}/pasarela/bloquear-pagos",
 							"host": [
-								"{{pasarelaUrl}}"
+								"{{alianzasBffUrl}}"
 							],
 							"path": [
+								"pasarela",
 								"bloquear-pagos"
 							]
 						}
@@ -914,11 +920,12 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{pasarelaUrl}}/permitir-pagos",
+							"raw": "{{alianzasBffUrl}}/pasarela/permitir-pagos",
 							"host": [
-								"{{pasarelaUrl}}"
+								"{{alianzasBffUrl}}"
 							],
 							"path": [
+								"pasarela",
 								"permitir-pagos"
 							]
 						}
