@@ -1,5 +1,5 @@
 import time
-from abc import ABC
+from abc import ABC, abstractmethod
 from types import SimpleNamespace
 import pulsar
 import _pulsar
@@ -26,14 +26,12 @@ class EventSubscriptor(Subscriptor, ABC):
     sub_name: str
     client: pulsar.Client
     max_retries: int = 20
+    enable_dlq: bool = False
+    emit_message: bool = False
 
     def __init__(self):
-        self.client = pulsar.Client(f'pulsar://{utils.broker_host()}:6650')
+        self.client = pulsar.Client(f"pulsar://{utils.broker_host()}:6650")
         self.logInfo(f"📥 Cliente Pulsar creado para tópico: '{self.topic}'")
-
-    def subscribe(self):
-        for data in self.suscribirse_a_mensajes():
-            self.process_message(data)
 
     def process_message(self, _):
         raise NotImplementedError()
@@ -45,11 +43,13 @@ class EventSubscriptor(Subscriptor, ABC):
         except Exception as error:
             self.logError("Error cerrando cliente Pulsar:", error)
 
-    def suscribirse_a_mensajes(self):
+    def subscribe(self):
         app = create_app("Atribuciones")
 
         consumer = self.obtener_consumidor()
-        self.logError(f"Suscrito a tópico: '{self.topic}' con subscripción '{self.sub_name}'")
+        self.logInfo(
+            f"Suscrito a tópico: '{self.topic}' con subscripción '{self.sub_name}'"
+        )
 
         self.logInfo(f"Esperando mensajes en tópico '{self.topic}'...")
         while True:
@@ -57,11 +57,11 @@ class EventSubscriptor(Subscriptor, ABC):
                 message = consumer.receive(timeout_millis=1000)
                 if message:
                     value = message.value()
-                    data = SimpleNamespace(**value['data'])
+                    data = SimpleNamespace(**value["data"])
                     self.logInfo(f"Llegó en tópico '{self.topic}': {data}")
                     with app.app_context():
                         try:
-                            yield data
+                            self.process_message(data if not self.emit_message else message)
                             consumer.acknowledge(message)
                         except Exception as error:
                             self.logError(f"Error al procesar el mensaje en {self.topic}: {error}")
@@ -86,10 +86,22 @@ class EventSubscriptor(Subscriptor, ABC):
                     subscription_name=self.sub_name,
                     schema=avro_schema,
                     negative_ack_redelivery_delay_ms=5000,
+                    dead_letter_policy=self.get_dlq_policy(),
                 )
             except Exception as error:
-                self.logError(f"Error suscribiéndose al tópico '{self.topic}'. Intento {retries}:", error)
+                self.logError(
+                    f"Error suscribiéndose al tópico '{self.topic}'. Intento {retries}:",
+                    error,
+                )
             time.sleep(5)
+
+    def get_dlq_policy(self):
+        if not self.enable_dlq:
+            return None
+        return pulsar.ConsumerDeadLetterPolicy(
+            max_redeliver_count=3,
+            dead_letter_topic=f"{self.topic}-DLQ",
+        )
 
     def logInfo(self, message: str):
         logging.info("=================================")
@@ -98,7 +110,10 @@ class EventSubscriptor(Subscriptor, ABC):
 
     def logError(self, message: str, error=None):
         logging.error("=================================")
-        logging.error(f"{message} {error}")
+        if error:
+            logging.error(f"{message} {error}")
+        else:
+            logging.error(message)
         logging.error("=================================")
 
 
@@ -113,10 +128,7 @@ class CommandSubscriptor(Subscriptor, ABC):
         self.client = pulsar.Client(f'pulsar://{utils.broker_host()}:6650')
         self.logInfo(f"📥 Cliente Pulsar creado para tópico: '{self.topic}'")
 
-    def subscribe(self):
-        for data in self.suscribirse_a_mensajes():
-            self.process_message(data)
-
+    @abstractmethod
     def process_message(self, _):
         raise NotImplementedError()
 
@@ -127,7 +139,7 @@ class CommandSubscriptor(Subscriptor, ABC):
         except Exception as error:
             self.logError("Error cerrando cliente Pulsar", error)
 
-    def suscribirse_a_mensajes(self):
+    def subscribe(self):
         app = create_app("Atribuciones")
         consumer = self.obtener_consumidor()
         self.logError(f"Suscrito a tópico: '{self.topic}' con subscripción '{self.sub_name}'")
@@ -141,7 +153,7 @@ class CommandSubscriptor(Subscriptor, ABC):
                     self.logInfo(f"Llegó en tópico '{self.topic}': {data}")
                     with app.app_context():
                         try:
-                            yield data
+                            self.process_message(data)
                             consumer.acknowledge(message)
                         except Exception as error:
                             self.logError(f"Error al procesar el mensaje en {self.topic}: {error}")
