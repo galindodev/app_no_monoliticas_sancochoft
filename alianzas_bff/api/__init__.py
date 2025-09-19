@@ -6,6 +6,7 @@ from . import pagos
 from . import atribuciones
 from . import programas
 from . import pasarela
+from . import sagas
 
 
 app = Flask("Alianzas BFF")
@@ -15,6 +16,7 @@ app.register_blueprint(pagos.bp)
 app.register_blueprint(atribuciones.bp)
 app.register_blueprint(programas.bp)
 app.register_blueprint(pasarela.bp)
+app.register_blueprint(sagas.bp)
 
 
 @app.route("/health")
