@@ -18,4 +18,4 @@ COPY ./atribuciones ./atribuciones
 
 EXPOSE 5000
 
-CMD ["wait-for", "db_atribuciones:5432", "--",  "gunicorn", "--bind", "0.0.0.0:5000", "-c", "atribuciones/gunicorn_config.py", "atribuciones.api:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "-c", "atribuciones/gunicorn_config.py", "atribuciones.api:app"]
