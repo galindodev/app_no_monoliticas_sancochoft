@@ -7,6 +7,7 @@ RUN apk add --no-cache \
     libffi-dev \
     openssl-dev \
     python3-dev \
+    curl \
     py3-pip
 
 COPY requirements.txt ./
