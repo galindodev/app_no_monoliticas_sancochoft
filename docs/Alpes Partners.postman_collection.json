@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "f569f0f7-24bb-413b-8b87-1e4dff07ff09",
+		"_postman_id": "0c043601-d1a5-4cd2-a65c-8c460ca635ba",
 		"name": "Alpes Partners",
-		"description": "API para el curso de No monolíticas, grupo Sancochof.\n\nEnfóquese en la carpeta **Alianzas BFF.**",
+		"description": "API para el curso de No monolíticas, grupo Sancochof.\n\nPuede encontrar más información de la documentación en la carpeta **Alianzas BFF.**",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "14550156"
 	},
@@ -100,7 +100,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Server",
@@ -190,7 +190,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Server",
@@ -254,7 +254,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Server",
@@ -348,7 +348,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Server",
@@ -424,7 +424,7 @@
 							},
 							"status": "ACCEPTED",
 							"code": 202,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Server",
@@ -515,7 +515,7 @@
 							},
 							"status": "ACCEPTED",
 							"code": 202,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Server",
@@ -549,9 +549,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{pagosUrl}}/sagas/{{idCorrelacion}}",
+							"raw": "{{alianzasBffUrl}}/sagas/{{idCorrelacion}}",
 							"host": [
-								"{{pagosUrl}}"
+								"{{alianzasBffUrl}}"
 							],
 							"path": [
 								"sagas",
@@ -575,7 +575,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Server",
@@ -616,7 +616,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Server",
@@ -676,7 +676,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Server",
@@ -720,7 +720,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Server",
@@ -764,7 +764,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Server",
@@ -822,7 +822,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Server",
@@ -880,7 +880,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Server",
@@ -938,7 +938,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Server",
@@ -1057,7 +1057,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{pulsarAdminUrl}}/admin/v2/persistent/{{pulsarTenant}}/{{pulsarNamespace}}}/:topic/subscription/:subName/skip_all",
+							"raw": "{{pulsarAdminUrl}}/admin/v2/persistent/{{pulsarTenant}}/{{pulsarNamespace}}/:topic/subscription/:subName/skip_all",
 							"host": [
 								"{{pulsarAdminUrl}}"
 							],
@@ -1066,7 +1066,7 @@
 								"v2",
 								"persistent",
 								"{{pulsarTenant}}",
-								"{{pulsarNamespace}}}",
+								"{{pulsarNamespace}}",
 								":topic",
 								"subscription",
 								":subName",
@@ -1125,7 +1125,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": null,
+							"_postman_previewlanguage": "Text",
 							"header": [
 								{
 									"key": "Server",
