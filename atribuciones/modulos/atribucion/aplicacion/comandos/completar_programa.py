@@ -27,8 +27,10 @@ class CompletarProgramaHandler(ComandoHandler):
         self.repositorio: RepositorioProgramaAtribucion = self.fabrica_repositorio.crear_objeto(ProgramaFabricaRepositorio.__class__)
 
     def handle(self, comando: CompletarPrograma):
-        logging.info(comando)
         programa: ProgramaAtribucion = self.repositorio.obtener_por_id(UUID(comando.id_programa))
+        if not programa:
+            logging.error(f"❌ CompletarProgramaHandler - No se encontró el programa de atribución con ID {comando.id_programa}")
+            return
 
         programa.completar()
 

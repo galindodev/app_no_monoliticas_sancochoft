@@ -1,3 +1,4 @@
+import logging
 from dataclasses import dataclass
 from uuid import UUID
 
@@ -40,6 +41,9 @@ class AgregarAtribucionHandler(ComandoHandler):
         atribucion: Atribucion = self.fabrica_atribucion.crear_objeto(atribucion_dto, MapeadorAtribucion())
 
         programa: ProgramaAtribucion = self.repositorio.obtener_por_id(UUID(comando.id_programa))
+        if not programa:
+            logging.error(f"❌ AgregarAtribucionHandler - No se encontró el programa de atribución con ID {comando.id_programa}")
+            return
 
         programa.agregar(atribucion)
 

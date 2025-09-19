@@ -28,6 +28,9 @@ class ReabrirProgramaHandler(ComandoHandler):
     def handle(self, comando: ReabrirPrograma):
         logging.info(comando)
         programa: ProgramaAtribucion = self.repositorio.obtener_por_id(UUID(comando.id_programa))
+        if not programa:
+            logging.error(f"❌ ReabrirProgramaHandler - No se encontró el programa de atribución con ID {comando.id_programa}")
+            return
 
         programa.reabrir()
 
