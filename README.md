@@ -14,6 +14,9 @@ Los siguientes diagramas son una vista general. Pretender dar una noción de lo 
 |-----------------------|
 | <img width="600" src="./docs/eventos_micros.png" />  |
 
+Los tipos de eventos usados en el sistema son **eventos de integración**.
+Esto es así ya que no se hace necesario la información completa de la transacción en cuestión; con la notificación y los identificadores de las agregaciones raíz es suficiente para suplir a nivel funcional con el flujo de trabajo.
+
 
 | Saga Log - Exitoso       | Saga Log - Fallido    |
 |--------------------------|-----------------------|
