@@ -131,11 +131,10 @@ Puede usar la [colección de Postman Alpes Partners](./docs/Alpes%20Partners.pos
 
 ### Participacion de los integrantes
 
-- Jhorman Galindo: Participó en la documentación general y en reuniones de coordinación. Desarrolló un microservicio BFF con comunicación basada en comandos. Se encargó de justificar los tipos de eventos y definir esquemas.
+- Jhorman Galindo: Participó en la documentación general y en reuniones de coordinación. Desarrolló un microservicio BFF con comunicación basada en comandos. Se encargó de justificar los tipos de eventos y definir esquemas. Finalización de experimentos y pruebas para conclusiones.
 
-- Leiner Barrios: Contribuyó en la documentación y en la construcción colaborativa de los diagramas. Desarrolló un microservicio ATRIBUCIONES implementando CRUD en la capa de datos. Ayudó a configurar la topología de datos.
+- Leiner Barrios: Contribuyó en la documentación y en la construcción colaborativa de los diagramas. Desarrolló un microservicio ATRIBUCIONES implementando CRUD en la capa de datos. Ayudó a configurar la topología de datos. Documentación y refinamiento de entrega 7.
 
-- Jaime Gallo: Apoyó en la documentación y reuniones de coordinación. Desarrolló un microservicio PAGOS y lo integró al repositorio común. Se enfocó en la propagación de comandos y eventos mediante Apache Pulsar y en el despliegue de los servicios en la plataforma elegida en los demás micros.
+- Jaime Gallo: Apoyó en la documentación y reuniones de coordinación. Desarrolló un microservicio PAGOS y lo integró al repositorio común. Se enfocó en la propagación de comandos y eventos mediante Apache Pulsar y en el despliegue de los servicios en la plataforma elegida en los demás micros. Implementó SAGA Los y configuración de SQS y DLQ para aws.
 
-- Alejandro Bogotá: Colaboró en la documentación grupal y en la construcción de diagramas. Desarrolló un microservicio LIQUIDACIONES. Participó en la validación de los escenarios de calidad definidos en la entrega pasada. Tiene ya casi listo la configuración de código en la parte CLOUD.
-NOTA: Todos trabajaron en 1 solo repositorio online de forma síncrona, documentando y construyendo los diagramas de los 4 microservicios.
+- Alejandro Bogotá: Colaboró en la documentación grupal y en la construcción de diagramas. Desarrolló un microservicio LIQUIDACIONES. Participó en la validación de los escenarios de calidad definidos en la entrega pasada. Tiene ya casi listo la configuración de código en la parte CLOUD. Desplegó a Cloud los microservicios.
